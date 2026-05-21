@@ -24,6 +24,19 @@ export default async function Navbar() {
       },
     });
     if (user) {
+      let isAdult = true;
+      if (user.dateOfBirth) {
+        const today = new Date();
+        const age = today.getFullYear() - user.dateOfBirth.getFullYear();
+        const m = today.getMonth() - user.dateOfBirth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < user.dateOfBirth.getDate())) {
+          isAdult = age - 1 >= 18;
+        } else {
+          isAdult = age >= 18;
+        }
+      } else {
+        isAdult = false;
+      }
       const postIds = user.posts.map((p) => p.id);
       const totalLikes = user.posts.reduce((sum, p) => sum + p.likes, 0);
       const totalShares = user.posts.reduce((sum, p) => sum + p.sharesCount, 0);
@@ -34,6 +47,7 @@ export default async function Navbar() {
         username: user.username,
         email: user.email,
         image: user.image,
+        isAdult,
         stats: {
           posts: user._count.posts,
           totalLikes,
@@ -69,6 +83,11 @@ export default async function Navbar() {
             <Sparkles className="h-4 w-4" />
             <span>Imaginarium</span>
           </Link>
+          {userData?.isAdult && (
+            <Link href="/adults" className="flex items-center gap-1.5 px-3 py-2 text-sm text-red-400 hover:text-red-300 transition-colors rounded-lg hover-lift">
+              <span>Adults</span>
+            </Link>
+          )}
         </div>
 
         {/* Actions */}
