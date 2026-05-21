@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Hero from "@/components/Hero";
 import PostCard from "@/components/PostCard";
-import FeaturedImaginarium from "@/components/FeaturedImaginarium";
+
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import T from '@/components/T';
@@ -105,7 +105,6 @@ export default async function Home(props: { searchParams?: Promise<{ v?: string;
   return (
     <>
       <Hero />
-      <FeaturedImaginarium />
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* === FILA DE FILTROS GENERALES (Latest / Top) === */}
         <div className="flex items-center justify-between mb-8">
