@@ -36,6 +36,14 @@ export default function MobileMenu({ session }: MobileMenuProps) {
               <span className="font-medium">Games</span>
             </Link>
             <Link
+              href="/imaginarium"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+            >
+              <Sparkles className="h-5 w-5 text-brand-accent" />
+              <span className="font-medium">Imaginarium</span>
+            </Link>
+            <Link
               href="/create"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"

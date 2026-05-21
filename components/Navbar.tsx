@@ -65,6 +65,10 @@ export default async function Navbar() {
             <Sparkles className="h-4 w-4" />
             <span>Games</span>
           </Link>
+          <Link href="/imaginarium" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
+            <Sparkles className="h-4 w-4" />
+            <span>Imaginarium</span>
+          </Link>
         </div>
 
         {/* Actions */}
