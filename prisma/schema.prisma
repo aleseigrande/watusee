@@ -1,0 +1,280 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id          String    @id @default(cuid())
+  username    String    @unique
+  email       String?   @unique
+  password    String?
+  image       String?
+  dateOfBirth DateTime?
+  createdAt   DateTime  @default(now())
+  posts        Post[]
+  playImages   PlayImage[]
+  reactions    Reaction[]
+  notifications Notification[] @relation("NotificationsReceived")
+  actedNotif   Notification[] @relation("NotificationsActed")
+  comments     Comment[]
+  stories      Story[]
+  storyReactions StoryReaction[]
+  storyComments  StoryComment[]
+  storyBookmarks StoryBookmark[]
+  echoDrawings   EchoDrawing[]
+  echoReactions  EchoReaction[]
+  echoComments   EchoComment[]
+  resonanceSignals   ResonanceSignal[]
+  resonanceResponses ResonanceResponse[]
+  resonanceReactions ResonanceReaction[]
+  resonanceComments  ResonanceComment[]
+  memorySessions     MemoryGameSession[]
+}
+
+model Post {
+  id               String       @id @default(cuid())
+  title            String
+  description      String       @default("")
+  originalImage    String
+  interpretedImage String
+  authorId         String
+  author           User         @relation(fields: [authorId], references: [id])
+  audience         String       @default("everyone")
+  likes            Int          @default(0)
+  sharesCount      Int          @default(0)
+  commentsCount    Int          @default(0)
+  createdAt        DateTime     @default(now())
+  reactions        Reaction[]
+
+  // Self-relation para rediseños (remixes)
+  remixOfId        String?
+  remixOf          Post?        @relation("Remixes", fields: [remixOfId], references: [id])
+  remixes          Post[]       @relation("Remixes")
+  comments         Comment[]
+}
+
+model Reaction {
+  id     String @id @default(cuid())
+  type   String // "like" | "fun" | "angry" | "indifferent" | "surprised" | "disgust"
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+}
+
+model PlayImage {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @default("")
+  imageUrl    String
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   // quien recibe la notificación
+  actorId   String   // quien hizo la acción
+  postId    String?
+  type      String   // "reaction" | "share" | "remix"
+  detail    String   // ej: "like", "fun", "" (texto adicional)
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  actor User @relation("NotificationsActed", fields: [actorId], references: [id])
+  user  User @relation("NotificationsReceived", fields: [userId], references: [id])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Story {
+  id               String          @id @default(cuid())
+  title            String
+  content          String
+  mood             String          @default("")
+  tags             String          @default("") // JSON array
+  authorId         String
+  author           User            @relation(fields: [authorId], references: [id])
+  remixOfId        String?
+  remixOf          Story?          @relation("StoryRemixes", fields: [remixOfId], references: [id])
+  remixes          Story[]         @relation("StoryRemixes")
+  images           StoryImage[]
+  reactions        StoryReaction[]
+  comments         StoryComment[]
+  bookmarks        StoryBookmark[]
+  dailyChallengeId String?
+  dailyChallenge   DailyChallenge? @relation(fields: [dailyChallengeId], references: [id])
+  likes            Int             @default(0)
+  sharesCount      Int             @default(0)
+  commentsCount    Int             @default(0)
+  createdAt        DateTime        @default(now())
+}
+
+model StoryImage {
+  id       String @id @default(cuid())
+  storyId  String
+  story    Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  imageUrl String
+  order    Int
+
+  @@unique([storyId, order])
+}
+
+model StoryReaction {
+  id      String @id @default(cuid())
+  storyId String
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type    String // "funny" | "disturbing" | "beautiful" | "weird" | "sad" | "mind-blowing"
+
+  @@unique([storyId, userId])
+}
+
+model StoryComment {
+  id        String   @id @default(cuid())
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model StoryBookmark {
+  id      String @id @default(cuid())
+  storyId String
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([storyId, userId])
+}
+
+model DailyChallenge {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  imageIds  String   // JSON array of 4 PlayImage IDs
+  stories   Story[]
+  createdAt DateTime @default(now())
+}
+
+model EchoDrawing {
+  id          String          @id @default(cuid())
+  imageUrl    String
+  drawingData String          // base64 PNG data URL
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reactions   EchoReaction[]
+  comments    EchoComment[]
+  createdAt   DateTime        @default(now())
+
+  @@unique([imageUrl, userId])
+}
+
+model EchoReaction {
+  id         String       @id @default(cuid())
+  drawingId  String
+  drawing    EchoDrawing  @relation(fields: [drawingId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       String       // "creepy" | "accurate" | "hilarious" | "cursed" | "genius" | "beautiful" | "impossible"
+
+  @@unique([drawingId, userId])
+}
+
+model EchoComment {
+  id        String       @id @default(cuid())
+  drawingId String
+  drawing   EchoDrawing  @relation(fields: [drawingId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime     @default(now())
+}
+
+model DailyEcho {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  imageUrl  String
+  createdAt DateTime @default(now())
+}
+
+model ResonanceSignal {
+  id             String                @id @default(cuid())
+  title          String
+  question       String                @default("What do you see?")
+  imageUrl       String
+  authorId       String
+  author         User                  @relation(fields: [authorId], references: [id])
+  callsSent      Int                   @default(0)
+  callsAnswered  Int                   @default(0)
+  resonanceScore Float                 @default(0)
+  responses      ResonanceResponse[]
+  reactions      ResonanceReaction[]
+  comments       ResonanceComment[]
+  createdAt      DateTime              @default(now())
+}
+
+model ResonanceResponse {
+  id             String           @id @default(cuid())
+  signalId       String
+  signal         ResonanceSignal  @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interpretation String
+  createdAt      DateTime         @default(now())
+
+  @@unique([signalId, userId])
+}
+
+model ResonanceReaction {
+  id       String           @id @default(cuid())
+  signalId String
+  signal   ResonanceSignal  @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type     String           // "scared" | "curious" | "amused" | "confused" | "fascinated" | "disturbed"
+
+  @@unique([signalId, userId])
+}
+
+model ResonanceComment {
+  id        String           @id @default(cuid())
+  signalId  String
+  signal    ResonanceSignal  @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime         @default(now())
+}
+
+model MemoryGameSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  pairs     Int
+  matched   Int      @default(0)
+  score     Int      @default(0)
+  time      Int      @default(0)     // seconds
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

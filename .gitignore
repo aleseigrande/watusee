@@ -36,6 +36,23 @@ yarn-error.log*
 # vercel
 .vercel
 
+# user uploads
+/public/uploads/
+
+# database (SQLite)
+*.db
+prisma/dev.db
+dev.db
+
+# zips / backups
+*.zip
+whatUseeChatgtp/
+
+# logs
+server.log
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/app/generated/prisma
