@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PlusCircle, Sparkles, BookOpen, Eye, Radio, Layers } from 'lucide-react';
+import { PlusCircle, Sparkles } from 'lucide-react';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -64,26 +64,6 @@ export default async function Navbar() {
           <Link href="/play" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
             <Sparkles className="h-4 w-4" />
             <span>Games</span>
-          </Link>
-          <Link href="/imaginarium" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
-            <Sparkles className="h-4 w-4" />
-            <span>Imaginarium</span>
-          </Link>
-          <Link href="/story" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
-            <BookOpen className="h-4 w-4" />
-            <span>Stories</span>
-          </Link>
-          <Link href="/echo" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
-            <Eye className="h-4 w-4" />
-            <span>Echo</span>
-          </Link>
-          <Link href="/resonance" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
-            <Radio className="h-4 w-4" />
-            <span>Resonance</span>
-          </Link>
-          <Link href="/memory" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
-            <Layers className="h-4 w-4" />
-            <span>Memory</span>
           </Link>
         </div>
 

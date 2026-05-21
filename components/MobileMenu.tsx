@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Sparkles, PlusCircle, Image, BookOpen, Eye, Radio, Layers } from 'lucide-react';
+import { Menu, X, Sparkles, PlusCircle, Image } from 'lucide-react';
 import { useT } from '@/lib/i18n/context';
 
 interface MobileMenuProps {
@@ -34,46 +34,6 @@ export default function MobileMenu({ session }: MobileMenuProps) {
             >
               <Sparkles className="h-5 w-5 text-brand-accent" />
               <span className="font-medium">Games</span>
-            </Link>
-            <Link
-              href="/imaginarium"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-            >
-              <Sparkles className="h-5 w-5 text-brand-accent" />
-              <span className="font-medium">Imaginarium</span>
-            </Link>
-            <Link
-              href="/story"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-            >
-              <BookOpen className="h-5 w-5 text-brand-primary" />
-              <span className="font-medium">Stories</span>
-            </Link>
-            <Link
-              href="/echo"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-            >
-              <Eye className="h-5 w-5 text-purple-400" />
-              <span className="font-medium">Echo Vision</span>
-            </Link>
-            <Link
-              href="/resonance"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-            >
-              <Radio className="h-5 w-5 text-amber-400" />
-              <span className="font-medium">Resonance</span>
-            </Link>
-            <Link
-              href="/memory"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-            >
-              <Layers className="h-5 w-5 text-brand-primary" />
-              <span className="font-medium">Memory</span>
             </Link>
             <Link
               href="/create"
