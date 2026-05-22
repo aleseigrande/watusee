@@ -1,12 +1,13 @@
 'use client';
 
-import { ArrowLeft, Gamepad2, BookOpen, Eye, Radio, Layers } from 'lucide-react';
+import { ArrowLeft, Gamepad2, BookOpen, Eye, Radio, Layers, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useT } from '@/lib/i18n/context';
 
 const games = [
   { id: 1, title: 'Game 1', desc: 'Descripción del juego 1' },
   { id: 2, title: 'Game 2', desc: 'Descripción del juego 2' },
+  { id: 2.5, title: 'Daily Challenge', desc: 'Cada día una imagen. Escribe lo que ves y al final del día se revelan todas las interpretaciones. Vota la mejor.', icon: <Sparkles className="w-8 h-8 text-yellow-400" />, href: '/daily-challenge' },
   { id: 3, title: 'Story Teller', desc: 'Cuatro imágenes aleatorias, una historia. Crea, comparte y descubre.', icon: <BookOpen className="w-8 h-8 text-brand-primary" />, href: '/story' },
   { id: 4, title: 'Echo Vision', desc: 'Un experimento de memoria visual. Ve una imagen 2 segundos y dibújala de memoria. Compara con otros.', icon: <Eye className="w-8 h-8 text-purple-400" />, href: '/echo' },
   { id: 5, title: 'Resonance Master', desc: 'Publica una imagen, haz una pregunta. Descubre cómo el mundo ve lo que tú ves.', icon: <Radio className="w-8 h-8 text-amber-400" />, href: '/resonance' },

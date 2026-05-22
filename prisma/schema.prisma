@@ -36,6 +36,8 @@ model User {
   resonanceReactions ResonanceReaction[]
   resonanceComments  ResonanceComment[]
   memorySessions     MemoryGameSession[]
+  dailyPareidoliaEntries DailyPareidoliaEntry[]
+  dailyPareidoliaLikes   DailyPareidoliaLike[]
 }
 
 model Post {
@@ -277,4 +279,36 @@ model MemoryGameSession {
   time      Int      @default(0)     // seconds
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model DailyPareidolia {
+  id        String                 @id @default(cuid())
+  date      DateTime               @unique
+  imageUrl  String
+  entries   DailyPareidoliaEntry[]
+  createdAt DateTime               @default(now())
+}
+
+model DailyPareidoliaEntry {
+  id             String              @id @default(cuid())
+  challengeId    String
+  challenge      DailyPareidolia     @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interpretation String
+  likes          Int                 @default(0)
+  likedBy        DailyPareidoliaLike[]
+  createdAt      DateTime            @default(now())
+
+  @@unique([challengeId, userId])
+}
+
+model DailyPareidoliaLike {
+  id        String               @id @default(cuid())
+  entryId   String
+  entry     DailyPareidoliaEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([entryId, userId])
 }
