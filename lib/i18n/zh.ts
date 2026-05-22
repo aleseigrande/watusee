@@ -146,7 +146,7 @@ export const zh: Record<string, string> = {
 
   // Hero
   'hero.whatyousee': '你看到了什么？',
-  'hero.draw': '画这个 →',
+  'hero.draw': '画这个',
 
   // Games hub
   'games.title': '游戏',

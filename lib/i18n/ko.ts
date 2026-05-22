@@ -146,7 +146,7 @@ export const ko: Record<string, string> = {
 
   // Hero
   'hero.whatyousee': '무엇이 보이나요?',
-  'hero.draw': '그리기 →',
+  'hero.draw': '그리기',
 
   // Games hub
   'games.title': '게임',

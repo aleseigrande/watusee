@@ -29,7 +29,7 @@ export const es: Record<string, string> = {
   'hero.desc': 'Únete a la comunidad de creadores de Pareidolia. Sube fotos, dibuja tus interpretaciones y revela los personajes ocultos en objetos cotidianos.',
   'hero.cta1': 'Explorar Creaciones',
   'hero.cta2': 'Comparte lo que ves',
-  'hero.draw': 'Dibuja esto \u2192',
+  'hero.draw': 'Dibuja esto',
 
   // Home page
   'home.trending': 'Pareidolias Populares',

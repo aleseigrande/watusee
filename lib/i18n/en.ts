@@ -29,7 +29,7 @@ export const en = {
   'hero.desc': 'Join the community of Pareidolia creators. Upload photos, draw your interpretations, and reveal the hidden characters in everyday objects.',
   'hero.cta1': 'Creativity with Fun',
   'hero.cta2': 'Share What You See',
-  'hero.draw': 'Draw this \u2192',
+  'hero.draw': 'Draw this',
 
   // Home page
   'home.trending': 'Trending Pareidolias',

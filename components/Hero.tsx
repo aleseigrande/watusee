@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
+import T from '@/components/T';
 import { useT } from '@/lib/i18n/context';
 
 interface FeaturedImage {
@@ -75,10 +76,11 @@ export default function Hero() {
                 }}
               />
             ))}
-            <div className="absolute top-2 right-2">
-              <span className="text-white text-xs font-medium bg-black/60 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                {t('hero.draw')}
-              </span>
+            <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/60 px-3 py-1.5 rounded-full backdrop-blur-sm">
+              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+              <span className="text-white text-xs font-medium">{t('hero.draw')}</span>
             </div>
           </button>
         ) : null}

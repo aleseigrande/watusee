@@ -146,7 +146,7 @@ export const ru: Record<string, string> = {
 
   // Hero
   'hero.whatyousee': 'ЧТО ВЫ ВИДИТЕ?',
-  'hero.draw': 'Нарисовать →',
+  'hero.draw': 'Нарисовать',
 
   // Games hub
   'games.title': 'Игры',
