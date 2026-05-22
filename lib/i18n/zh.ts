@@ -139,6 +139,61 @@ export const zh: Record<string, string> = {
   'resonance.share.text': '你在这里看到了什么？猜猜看，看看你是否猜对了 🔮',
   'resonance.share.button': '分享信号',
 
+  // Navbar
+  'nav.games': '游戏',
+  'nav.imaginarium': '想象馆',
+  'nav.adults': '成人',
+
+  // Hero
+  'hero.whatyousee': '你看到了什么？',
+  'hero.draw': '画这个 →',
+
+  // Games hub
+  'games.title': '游戏',
+  'games.subtitle': '选择一个游戏，享受乐趣',
+  'games.daily.title': '每日挑战',
+  'games.daily.desc': '每天一张图片。写下你看到的，午夜揭示所有解读。投票选出最佳。',
+  'games.story.title': '故事讲述者',
+  'games.story.desc': '四张随机图片，一个故事。创作、分享和发现。',
+  'games.echo.title': '回声视觉',
+  'games.echo.desc': '视觉记忆实验。看图片2秒，凭记忆画出来。与他人比较。',
+  'games.resonance.title': '共鸣大师',
+  'games.resonance.desc': '发布图片，提出问题。发现世界如何看待你所看到的。',
+  'games.memory.title': '记忆共振',
+  'games.memory.desc': '匹配原图和解读之间的配对。记忆与感知游戏。',
+
+  // Imaginarium
+  'imaginarium.home': '首页',
+  'imaginarium.badge': '上传一张图片，唤醒你想象的力量',
+  'imaginarium.upload': '上传',
+  'imaginarium.image': '图片',
+
+  // Daily Challenge
+  'daily.title': '每日挑战',
+  'daily.whatyousee': '你看到了什么？',
+  'daily.revealed': '挑战结束',
+  'daily.participated': '{count}人参与',
+  'daily.reveal': '午夜揭示 —',
+  'daily.hidden': '你的答案在午夜前隐藏。',
+  'daily.placeholder': '输入你的解读...',
+  'daily.submit': '提交',
+  'daily.yoursubmission': '你的解读（午夜前隐藏）',
+  'daily.comeback': '午夜回来看看别人看到了什么！',
+  'daily.everyone': '大家看到的',
+  'daily.nobody': '今天没有人参与。',
+  'daily.loading': '加载挑战...',
+  'daily.noimages': '今日挑战没有可用图片',
+  'daily.back': '返回首页',
+  'daily.games': '游戏',
+  'daily.you': '你',
+
+  // Adults
+  'adults.back': '← 返回首页',
+  'adults.title': '成人内容',
+  'adults.latest': '最新',
+  'adults.top': '最热',
+  'adults.empty': '暂无成人内容。',
+
   'meta.title': 'WatUSee | 看见看不见的',
   'meta.desc': '视错觉创作者的社交网络。发现并分享世界中隐藏的形状。',
 } as const;

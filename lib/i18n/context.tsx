@@ -32,9 +32,15 @@ export function LangProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback(
-    (key: string): string => {
+    (key: string, params?: Record<string, string>): string => {
       const dict = translations[lang];
-      return (dict as any)[key] ?? key;
+      let val = (dict as any)[key] ?? key;
+      if (params) {
+        for (const [k, v] of Object.entries(params)) {
+          val = val.replace(`{${k}}`, v);
+        }
+      }
+      return val;
     },
     [lang]
   );

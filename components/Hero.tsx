@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
-import T from '@/components/T';
+import { useT } from '@/lib/i18n/context';
 
 interface FeaturedImage {
   id: string;
@@ -13,6 +13,7 @@ interface FeaturedImage {
 }
 
 export default function Hero() {
+  const t = useT();
   const router = useRouter();
   const [current, setCurrent] = useState(0);
   const [images, setImages] = useState<FeaturedImage[]>([]);
@@ -50,7 +51,7 @@ export default function Hero() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 text-gradient leading-none">
-          WHAT YOU SEE?
+          {t('hero.whatyousee')}
         </h1>
 
         {/* Carousel from daily Imaginarium */}
@@ -76,7 +77,7 @@ export default function Hero() {
             ))}
             <div className="absolute top-2 right-2">
               <span className="text-white text-xs font-medium bg-black/60 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                Draw this →
+                {t('hero.draw')}
               </span>
             </div>
           </button>

@@ -77,15 +77,15 @@ export default async function Navbar() {
         <div className="hidden md:flex items-center gap-1 mr-2">
           <Link href="/play" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
             <Sparkles className="h-4 w-4" />
-            <span>Games</span>
+            <span><T id="nav.games" /></span>
           </Link>
           <Link href="/imaginarium" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
             <Sparkles className="h-4 w-4" />
-            <span>Imaginarium</span>
+            <span><T id="nav.imaginarium" /></span>
           </Link>
           {userData?.isAdult && (
             <Link href="/adults" className="flex items-center gap-1.5 px-3 py-2 text-sm text-red-400 hover:text-red-300 transition-colors rounded-lg hover-lift">
-              <span>Adults</span>
+              <span><T id="nav.adults" /></span>
             </Link>
           )}
         </div>

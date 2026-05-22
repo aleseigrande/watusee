@@ -9,6 +9,9 @@ export const es: Record<string, string> = {
   'nav.logout': 'Cerrar sesión',
   'nav.lang': 'Seleccionar idioma',
   'nav.mycreations': 'Mis Creaciones',
+  'nav.games': 'Juegos',
+  'nav.imaginarium': 'Imaginarium',
+  'nav.adults': 'Adultos',
 
   // MobileMenu
   'mobile.play': 'Jugar',
@@ -19,12 +22,14 @@ export const es: Record<string, string> = {
 
   // Hero
   'hero.badge': 'Descubre las formas ocultas en el mundo',
+  'hero.whatyousee': '¿QUÉ VES?',
   'hero.line1': 'Libera tu',
   'hero.line2': 'Imaginación.',
   'hero.line3': 'Ve lo invisible.',
   'hero.desc': 'Únete a la comunidad de creadores de Pareidolia. Sube fotos, dibuja tus interpretaciones y revela los personajes ocultos en objetos cotidianos.',
   'hero.cta1': 'Explorar Creaciones',
   'hero.cta2': 'Comparte lo que ves',
+  'hero.draw': 'Dibuja esto \u2192',
 
   // Home page
   'home.trending': 'Pareidolias Populares',
@@ -142,6 +147,56 @@ export const es: Record<string, string> = {
   'canvas.alt': 'Base para pareidolia',
   'canvas.continue': 'Continuar',
 
+  // Games hub
+  'games.title': 'Juegos',
+  'games.subtitle': 'Elige un juego y diviértete',
+  'games.daily.title': 'Desafío Diario',
+  'games.daily.desc': 'Cada día una imagen. Escribe lo que ves, a medianoche se revelan todas las interpretaciones. Vota la mejor.',
+  'games.story.title': 'Story Teller',
+  'games.story.desc': 'Cuatro imágenes aleatorias, una historia. Crea, comparte y descubre.',
+  'games.echo.title': 'Echo Vision',
+  'games.echo.desc': 'Un experimento de memoria visual. Ve una imagen 2 segundos y dibújala de memoria. Compara con otros.',
+  'games.resonance.title': 'Resonance Master',
+  'games.resonance.desc': 'Publica una imagen, haz una pregunta. Descubre cómo el mundo ve lo que tú ves.',
+  'games.memory.title': 'Memory Resonance',
+  'games.memory.desc': 'Encuentra las parejas entre imágenes originales y sus interpretaciones. Un juego de memoria y percepción.',
+
+  // Imaginarium
+  'imaginarium.home': 'INICIO',
+  'imaginarium.badge': 'Sube una imagen y despierta el poder de tu imaginación',
+  'imaginarium.upload': 'Subir',
+  'imaginarium.image': 'Imagen',
+
+  // Daily Challenge
+  'daily.title': 'Desafío Diario',
+  'daily.whatyousee': '¿Qué ves?',
+  'daily.revealed': 'Desafío terminado',
+  'daily.participated': '{count} participaron',
+  'daily.reveal': 'Se revela a medianoche \u2014',
+  'daily.hidden': 'Tu respuesta está oculta hasta la medianoche.',
+  'daily.placeholder': 'Escribe tu interpretación...',
+  'daily.submit': 'Enviar',
+  'daily.yoursubmission': 'Tu interpretación (oculta hasta la medianoche)',
+  'daily.comeback': '¡Vuelve a medianoche para ver lo que otros vieron!',
+  'daily.everyone': 'Lo que todos vieron',
+  'daily.nobody': 'Nadie participó hoy.',
+  'daily.loading': 'Cargando desafío...',
+  'daily.noimages': 'No hay imágenes disponibles para el desafío de hoy',
+  'daily.back': 'Volver al inicio',
+  'daily.games': 'Juegos',
+  'daily.you': 'tú',
+
+  // Adults
+  'adults.back': '\u2190 Volver al inicio',
+  'adults.title': 'Contenido Adultos',
+  'adults.latest': 'Recientes',
+  'adults.top': 'Top',
+  'adults.empty': 'No hay contenido adulto aún.',
+
+  // Resonance
+  'resonance.share.text': '¿Qué ves aquí? Adivina y descubre si acertaste \ud83d\udd2e',
+  'resonance.share.button': 'Compartir señal',
+
   // LanguageSwitcher
   'lang.es': 'Español',
   'lang.en': 'English',
@@ -149,9 +204,10 @@ export const es: Record<string, string> = {
   'lang.ko': '한국어',
   'lang.ru': 'Русский',
 
-  // Resonance
-  'resonance.share.text': '¿Qué ves aquí? Adivina y descubre si acertaste 🔮',
-  'resonance.share.button': 'Compartir señal',
+  // My Creations
+  'mycreations.title': 'Mis Creaciones',
+  'mycreations.empty': 'Aún no has creado ninguna pareidolia.',
+  'mycreations.empty.cta': 'Crea tu primera',
 
   // Metadata
   'meta.title': 'WatUSee | Ve lo Invisible',

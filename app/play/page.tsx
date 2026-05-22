@@ -5,13 +5,11 @@ import Link from 'next/link';
 import { useT } from '@/lib/i18n/context';
 
 const games = [
-  { id: 1, title: 'Game 1', desc: 'Descripción del juego 1' },
-  { id: 2, title: 'Game 2', desc: 'Descripción del juego 2' },
-  { id: 2.5, title: 'Daily Challenge', desc: 'Cada día una imagen. Escribe lo que ves y al final del día se revelan todas las interpretaciones. Vota la mejor.', icon: <Sparkles className="w-8 h-8 text-yellow-400" />, href: '/daily-challenge' },
-  { id: 3, title: 'Story Teller', desc: 'Cuatro imágenes aleatorias, una historia. Crea, comparte y descubre.', icon: <BookOpen className="w-8 h-8 text-brand-primary" />, href: '/story' },
-  { id: 4, title: 'Echo Vision', desc: 'Un experimento de memoria visual. Ve una imagen 2 segundos y dibújala de memoria. Compara con otros.', icon: <Eye className="w-8 h-8 text-purple-400" />, href: '/echo' },
-  { id: 5, title: 'Resonance Master', desc: 'Publica una imagen, haz una pregunta. Descubre cómo el mundo ve lo que tú ves.', icon: <Radio className="w-8 h-8 text-amber-400" />, href: '/resonance' },
-  { id: 6, title: 'Memory Resonance', desc: 'Encuentra las parejas entre imágenes originales y sus interpretaciones. Un juego de memoria y percepción.', icon: <Layers className="w-8 h-8 text-brand-primary" />, href: '/memory' },
+  { id: 2.5, titleKey: 'games.daily.title', descKey: 'games.daily.desc', icon: <Sparkles className="w-8 h-8 text-yellow-400" />, href: '/daily-challenge' },
+  { id: 3, titleKey: 'games.story.title', descKey: 'games.story.desc', icon: <BookOpen className="w-8 h-8 text-brand-primary" />, href: '/story' },
+  { id: 4, titleKey: 'games.echo.title', descKey: 'games.echo.desc', icon: <Eye className="w-8 h-8 text-purple-400" />, href: '/echo' },
+  { id: 5, titleKey: 'games.resonance.title', descKey: 'games.resonance.desc', icon: <Radio className="w-8 h-8 text-amber-400" />, href: '/resonance' },
+  { id: 6, titleKey: 'games.memory.title', descKey: 'games.memory.desc', icon: <Layers className="w-8 h-8 text-brand-primary" />, href: '/memory' },
 ];
 
 export default function PlayPage() {
@@ -28,8 +26,8 @@ export default function PlayPage() {
       </Link>
 
       <div className="text-center mb-12">
-        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">Games</h1>
-        <p className="text-gray-400 text-lg">Choose a game and have fun</p>
+        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">{t('games.title')}</h1>
+        <p className="text-gray-400 text-lg">{t('games.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -41,15 +39,15 @@ export default function PlayPage() {
             <div className="w-16 h-16 rounded-full bg-brand-primary/20 flex items-center justify-center mb-4">
               {game.icon || <Gamepad2 className="w-8 h-8 text-brand-primary" />}
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">{game.title}</h3>
-            <p className="text-gray-400 text-sm mb-6 flex-1">{game.desc}</p>
+            <h3 className="text-xl font-bold text-white mb-2">{t(game.titleKey)}</h3>
+            <p className="text-gray-400 text-sm mb-6 flex-1">{t(game.descKey)}</p>
             {game.href ? (
               <Link href={game.href} className="w-full px-4 py-2.5 bg-brand-primary hover:bg-brand-primary/80 text-white rounded-full font-semibold transition-colors text-center block">
-                {game.title}
+                {t(game.titleKey)}
               </Link>
             ) : (
               <button className="w-full px-4 py-2.5 bg-brand-primary hover:bg-brand-primary/80 text-white rounded-full font-semibold transition-colors">
-                {game.title}
+                {t(game.titleKey)}
               </button>
             )}
           </div>

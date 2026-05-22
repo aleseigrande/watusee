@@ -139,6 +139,61 @@ export const ko: Record<string, string> = {
   'resonance.share.text': '여기서 무엇이 보이나요? 맞혀보고 확인해보세요 🔮',
   'resonance.share.button': '시그널 공유',
 
+  // Navbar
+  'nav.games': '게임',
+  'nav.imaginarium': '이매지나리움',
+  'nav.adults': '성인',
+
+  // Hero
+  'hero.whatyousee': '무엇이 보이나요?',
+  'hero.draw': '그리기 →',
+
+  // Games hub
+  'games.title': '게임',
+  'games.subtitle': '게임을 선택하고 즐기세요',
+  'games.daily.title': '데일리 챌린지',
+  'games.daily.desc': '매일 하나의 이미지. 당신이 보는 것을 쓰고, 자정에 모든 해석이 공개됩니다. 가장 좋은 것에 투표하세요.',
+  'games.story.title': '스토리 텔러',
+  'games.story.desc': '네 개의 무작위 이미지, 하나의 이야기. 만들고, 공유하고, 발견하세요.',
+  'games.echo.title': '에코 비전',
+  'games.echo.desc': '시각 기억 실험. 이미지를 2초 보고 기억해서 그리세요. 다른 사람들과 비교하세요.',
+  'games.resonance.title': '레조넌스 마스터',
+  'games.resonance.desc': '이미지를 올리고 질문하세요. 세상이 당신의 시각을 어떻게 보는지 발견하세요.',
+  'games.memory.title': '메모리 레조넌스',
+  'games.memory.desc': '원본 이미지와 해석 사이의 짝을 찾으세요. 기억과 인식 게임.',
+
+  // Imaginarium
+  'imaginarium.home': '홈',
+  'imaginarium.badge': '이미지를 업로드하고 상상력의 힘을 깨우세요',
+  'imaginarium.upload': '업로드',
+  'imaginarium.image': '이미지',
+
+  // Daily Challenge
+  'daily.title': '데일리 챌린지',
+  'daily.whatyousee': '무엇이 보이나요?',
+  'daily.revealed': '챌린지 종료',
+  'daily.participated': '{count}명 참여',
+  'daily.reveal': '자정에 공개 —',
+  'daily.hidden': '당신의 답변은 자정까지 숨겨집니다.',
+  'daily.placeholder': '해석을 입력하세요...',
+  'daily.submit': '제출',
+  'daily.yoursubmission': '당신의 해석 (자정까지 숨겨짐)',
+  'daily.comeback': '자정에 돌아와서 다른 사람들이 본 것을 확인하세요!',
+  'daily.everyone': '모두가 본 것',
+  'daily.nobody': '오늘 참여한 사람이 없습니다.',
+  'daily.loading': '챌린지 로딩 중...',
+  'daily.noimages': '오늘의 챌린지에 사용할 이미지가 없습니다',
+  'daily.back': '홈으로 돌아가기',
+  'daily.games': '게임',
+  'daily.you': '당신',
+
+  // Adults
+  'adults.back': '← 홈으로 돌아가기',
+  'adults.title': '성인 콘텐츠',
+  'adults.latest': '최신',
+  'adults.top': '인기',
+  'adults.empty': '아직 성인 콘텐츠가 없습니다.',
+
   'meta.title': 'WatUSee | 보이지 않는 것을 보다',
   'meta.desc': '파레이돌리아 창작자를 위한 소셜 네트워크. 세상에 숨겨진 형태를 발견하고 공유하세요.',
 } as const;

@@ -3,6 +3,7 @@ import PostCard from "@/components/PostCard";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import T from '@/components/T';
 
 export const dynamic = 'force-dynamic';
 
@@ -76,17 +77,17 @@ export default async function AdultsPage(props: { searchParams?: Promise<{ sort?
     <div className="min-h-screen pt-24 pb-16 px-4 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">&larr; Back to Home</Link>
-          <h1 className="text-3xl font-bold tracking-tight text-red-400 mt-2">Adults Content</h1>
+          <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors"><T id="adults.back" /></Link>
+          <h1 className="text-3xl font-bold tracking-tight text-red-400 mt-2"><T id="adults.title" /></h1>
         </div>
         <div className="flex gap-2">
-          <Link href="/adults" className={btnClass(sort === 'latest')} scroll={false}>Latest</Link>
-          <Link href="/adults?sort=top" className={btnClass(sort === 'top')} scroll={false}>Top</Link>
+          <Link href="/adults" className={btnClass(sort === 'latest')} scroll={false}><T id="adults.latest" /></Link>
+          <Link href="/adults?sort=top" className={btnClass(sort === 'top')} scroll={false}><T id="adults.top" /></Link>
         </div>
       </div>
 
       {sortedPosts.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">No adult content yet.</div>
+        <div className="text-center py-20 text-gray-400"><T id="adults.empty" /></div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {sortedPosts.map((post) => (

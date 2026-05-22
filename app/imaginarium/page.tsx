@@ -76,14 +76,14 @@ export default function PlayPage() {
         className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
       >
         <ArrowLeft className="w-5 h-5" />
-        <span>HOME</span>
+        <span>{t('imaginarium.home')}</span>
       </Link>
 
       {/* Encabezado: badge, IMAGINARIUM, botón Up Load, eslogan y descripción */}
       <div className="text-center mb-8 sm:mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-dark-surface/50 border border-dark-glass-border text-sm text-gray-300 mb-4 sm:mb-6 backdrop-blur-sm">
           <Sparkles className="h-4 w-4 text-brand-accent" />
-          <span>Upload an image and awaken the power of your imagination</span>
+          <span>{t('imaginarium.badge')}</span>
         </div>
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 sm:mb-8 tracking-tight">
           {t('play.title')}
@@ -94,7 +94,7 @@ export default function PlayPage() {
           className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary hover:bg-brand-primary/80 text-white font-bold rounded-full transition-all hover:scale-105 shadow-lg shadow-brand-primary/30 mb-8"
         >
           <Upload className="w-5 h-5" />
-          Upload
+          {t('imaginarium.upload')}
         </button>
 
 
@@ -184,7 +184,7 @@ export default function PlayPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">Image</label>
+                <label className="block text-sm font-medium text-gray-400 mb-1">{t('imaginarium.image')}</label>
                 <input
                   type="file"
                   accept="image/*"

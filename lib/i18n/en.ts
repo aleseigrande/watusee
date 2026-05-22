@@ -9,6 +9,9 @@ export const en = {
   'nav.logout': 'Log out',
   'nav.lang': 'Select language',
   'nav.mycreations': 'My Creations',
+  'nav.games': 'Games',
+  'nav.imaginarium': 'Imaginarium',
+  'nav.adults': 'Adults',
 
   // MobileMenu
   'mobile.play': 'Play',
@@ -19,12 +22,14 @@ export const en = {
 
   // Hero
   'hero.badge': 'Discover the hidden shapes in the world',
+  'hero.whatyousee': 'WHAT YOU SEE?',
   'hero.line1': 'Unleash your',
   'hero.line2': 'Imagination.',
   'hero.line3': 'See the unseen.',
   'hero.desc': 'Join the community of Pareidolia creators. Upload photos, draw your interpretations, and reveal the hidden characters in everyday objects.',
   'hero.cta1': 'Creativity with Fun',
   'hero.cta2': 'Share What You See',
+  'hero.draw': 'Draw this \u2192',
 
   // Home page
   'home.trending': 'Trending Pareidolias',
@@ -154,8 +159,54 @@ export const en = {
   'mycreations.empty': "You haven't created any pareidolias yet.",
   'mycreations.empty.cta': 'Create your first one',
 
+  // Games hub
+  'games.title': 'Games',
+  'games.subtitle': 'Choose a game and have fun',
+  'games.daily.title': 'Daily Challenge',
+  'games.daily.desc': 'Each day one image. Write what you see, at midnight all interpretations are revealed. Vote for the best.',
+  'games.story.title': 'Story Teller',
+  'games.story.desc': 'Four random images, one story. Create, share, and discover.',
+  'games.echo.title': 'Echo Vision',
+  'games.echo.desc': 'A visual memory experiment. See an image for 2 seconds and draw it from memory. Compare with others.',
+  'games.resonance.title': 'Resonance Master',
+  'games.resonance.desc': 'Post an image, ask a question. Discover how the world sees what you see.',
+  'games.memory.title': 'Memory Resonance',
+  'games.memory.desc': 'Match pairs between original images and their interpretations. A memory and perception game.',
+
+  // Imaginarium
+  'imaginarium.home': 'HOME',
+  'imaginarium.badge': 'Upload an image and awaken the power of your imagination',
+  'imaginarium.upload': 'Upload',
+  'imaginarium.image': 'Image',
+
+  // Daily Challenge
+  'daily.title': 'Daily Challenge',
+  'daily.whatyousee': 'What do you see?',
+  'daily.revealed': 'Challenge ended',
+  'daily.participated': '{count} participated',
+  'daily.reveal': 'Reveal at midnight \u2014',
+  'daily.hidden': 'Your answer is hidden until midnight.',
+  'daily.placeholder': 'Type your interpretation...',
+  'daily.submit': 'Submit',
+  'daily.yoursubmission': 'Your interpretation (hidden until midnight)',
+  'daily.comeback': 'Come back at midnight to see what others saw!',
+  'daily.everyone': 'What everyone saw',
+  'daily.nobody': 'No one participated today.',
+  'daily.loading': 'Loading challenge...',
+  'daily.noimages': 'No images available for today\u2019s challenge',
+  'daily.back': 'Back to Home',
+  'daily.games': 'Games',
+  'daily.you': 'you',
+
+  // Adults
+  'adults.back': '\u2190 Back to Home',
+  'adults.title': 'Adults Content',
+  'adults.latest': 'Latest',
+  'adults.top': 'Top',
+  'adults.empty': 'No adult content yet.',
+
   // Resonance
-  'resonance.share.text': 'What do you see here? Guess and discover if you were right 🔮',
+  'resonance.share.text': 'What do you see here? Guess and discover if you were right \ud83d\udd2e',
   'resonance.share.button': 'Share Signal',
 
   // Metadata

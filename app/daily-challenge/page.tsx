@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Send, Heart, Eye, Sparkles, Clock } from 'lucide-react';
+import { useT } from '@/lib/i18n/context';
 
 interface Entry {
   id: string;
@@ -25,6 +26,7 @@ interface ChallengeData {
 }
 
 export default function DailyChallengePage() {
+  const t = useT();
   const [data, setData] = useState<ChallengeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [interpretation, setInterpretation] = useState('');
@@ -80,7 +82,7 @@ export default function DailyChallengePage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black pt-24 pb-16 px-4 flex items-center justify-center">
-        <div className="animate-pulse text-gray-500">Loading challenge...</div>
+        <div className="animate-pulse text-gray-500">{t('daily.loading')}</div>
       </div>
     );
   }
@@ -88,8 +90,8 @@ export default function DailyChallengePage() {
   if (!data) {
     return (
       <div className="min-h-screen bg-black pt-24 pb-16 px-4 text-center">
-        <p className="text-gray-400 mb-4">No images available for today&apos;s challenge</p>
-        <Link href="/" className="text-brand-primary hover:underline">Back to Home</Link>
+        <p className="text-gray-400 mb-4">{t('daily.noimages')}</p>
+        <Link href="/" className="text-brand-primary hover:underline">{t('daily.back')}</Link>
       </div>
     );
   }
@@ -98,18 +100,18 @@ export default function DailyChallengePage() {
     <div className="min-h-screen bg-black pt-20 pb-16 px-4 max-w-3xl mx-auto">
       <Link href="/play" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors">
         <ArrowLeft className="w-5 h-5" />
-        <span>Games</span>
+        <span>{t('daily.games')}</span>
       </Link>
 
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-medium mb-3">
           <Sparkles className="w-3.5 h-3.5" />
-          Daily Challenge
+          {t('daily.title')}
         </div>
-        <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">What do you see?</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{t('daily.whatyousee')}</h1>
         <p className="text-gray-500 text-sm flex items-center justify-center gap-1.5">
           <Clock className="w-3.5 h-3.5" />
-          {data.revealed ? 'Challenge ended' : `Reveal at midnight — ${data.totalEntries} participated`}
+          {data.revealed ? t('daily.revealed') : `${t('daily.reveal')} ${data.totalEntries} ${t('daily.participated', { count: data.totalEntries.toString() })}`}
         </p>
       </div>
 
@@ -119,18 +121,18 @@ export default function DailyChallengePage() {
         <img src={data.imageUrl} alt="Daily challenge" className="w-full h-full object-cover" />
       </div>
 
-      {/* Submit interpretation (only if not revealed and not yet submitted) */}
+      {/* Submit interpretation */}
       {!data.revealed && !data.myEntry && (
         <div className="max-w-md mx-auto mb-10">
           <p className="text-gray-300 text-sm mb-3 text-center">
-            What do <span className="text-brand-primary">you</span> see? Your answer is hidden until midnight.
+            {t('daily.whatyousee')} <span className="text-brand-primary">{t('daily.you')}</span>? {t('daily.hidden')}
           </p>
           <div className="flex gap-3">
             <input
               type="text"
               value={interpretation}
               onChange={(e) => setInterpretation(e.target.value)}
-              placeholder="Type your interpretation..."
+              placeholder={t('daily.placeholder')}
               className="flex-1 bg-zinc-800 border border-dark-glass-border rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
             />
             <button
@@ -148,10 +150,10 @@ export default function DailyChallengePage() {
       {!data.revealed && data.myEntry && (
         <div className="max-w-md mx-auto mb-10 text-center">
           <div className="glass-panel rounded-xl p-4 border border-brand-primary/30">
-            <p className="text-xs text-gray-500 mb-1">Your interpretation (hidden until midnight)</p>
+            <p className="text-xs text-gray-500 mb-1">{t('daily.yoursubmission')}</p>
             <p className="text-white font-medium italic">&ldquo;{data.myEntry.interpretation}&rdquo;</p>
           </div>
-          <p className="text-gray-600 text-xs mt-3">Come back at midnight to see what others saw!</p>
+          <p className="text-gray-600 text-xs mt-3">{t('daily.comeback')}</p>
         </div>
       )}
 
@@ -160,7 +162,7 @@ export default function DailyChallengePage() {
         <div className="max-w-lg mx-auto">
           <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
             <Eye className="w-5 h-5 text-brand-primary" />
-            What everyone saw
+            {t('daily.everyone')}
           </h3>
           <div className="space-y-2">
             {data.entries.map((entry) => (
@@ -193,7 +195,7 @@ export default function DailyChallengePage() {
       )}
 
       {data.revealed && data.entries.length === 0 && (
-        <p className="text-center text-gray-500">No one participated today.</p>
+        <p className="text-center text-gray-500">{t('daily.nobody')}</p>
       )}
     </div>
   );

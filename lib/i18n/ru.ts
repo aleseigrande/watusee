@@ -139,6 +139,61 @@ export const ru: Record<string, string> = {
   'resonance.share.text': 'Что вы здесь видите? Угадайте и узнайте, правы ли вы 🔮',
   'resonance.share.button': 'Поделиться сигналом',
 
+  // Navbar
+  'nav.games': 'Игры',
+  'nav.imaginarium': 'Имагинариум',
+  'nav.adults': 'Для взрослых',
+
+  // Hero
+  'hero.whatyousee': 'ЧТО ВЫ ВИДИТЕ?',
+  'hero.draw': 'Нарисовать →',
+
+  // Games hub
+  'games.title': 'Игры',
+  'games.subtitle': 'Выберите игру и веселитесь',
+  'games.daily.title': 'Ежедневный вызов',
+  'games.daily.desc': 'Каждый день одно изображение. Напишите, что вы видите, в полночь все интерпретации раскрываются. Голосуйте за лучшую.',
+  'games.story.title': 'Story Teller',
+  'games.story.desc': 'Четыре случайных изображения, одна история. Создавайте, делитесь и открывайте.',
+  'games.echo.title': 'Echo Vision',
+  'games.echo.desc': 'Эксперимент с визуальной памятью. Посмотрите на изображение 2 секунды и нарисуйте по памяти. Сравните с другими.',
+  'games.resonance.title': 'Resonance Master',
+  'games.resonance.desc': 'Опубликуйте изображение, задайте вопрос. Узнайте, как мир видит то, что видите вы.',
+  'games.memory.title': 'Memory Resonance',
+  'games.memory.desc': 'Найдите пары между оригинальными изображениями и их интерпретациями. Игра на память и восприятие.',
+
+  // Imaginarium
+  'imaginarium.home': 'ГЛАВНАЯ',
+  'imaginarium.badge': 'Загрузите изображение и пробудите силу своего воображения',
+  'imaginarium.upload': 'Загрузить',
+  'imaginarium.image': 'Изображение',
+
+  // Daily Challenge
+  'daily.title': 'Ежедневный вызов',
+  'daily.whatyousee': 'Что вы видите?',
+  'daily.revealed': 'Вызов завершён',
+  'daily.participated': '{count} участвовали',
+  'daily.reveal': 'Раскрытие в полночь —',
+  'daily.hidden': 'Ваш ответ скрыт до полуночи.',
+  'daily.placeholder': 'Напишите свою интерпретацию...',
+  'daily.submit': 'Отправить',
+  'daily.yoursubmission': 'Ваша интерпретация (скрыта до полуночи)',
+  'daily.comeback': 'Вернитесь в полночь, чтобы увидеть, что увидели другие!',
+  'daily.everyone': 'Что все увидели',
+  'daily.nobody': 'Сегодня никто не участвовал.',
+  'daily.loading': 'Загрузка вызова...',
+  'daily.noimages': 'Нет доступных изображений для сегодняшнего вызова',
+  'daily.back': 'На главную',
+  'daily.games': 'Игры',
+  'daily.you': 'вы',
+
+  // Adults
+  'adults.back': '← На главную',
+  'adults.title': 'Контент для взрослых',
+  'adults.latest': 'Новые',
+  'adults.top': 'Лучшие',
+  'adults.empty': 'Пока нет контента для взрослых.',
+
   'meta.title': 'WatUSee | Увидеть невидимое',
   'meta.desc': 'Социальная сеть для создателей парейдолий. Открывайте и делитесь скрытыми формами в мире.',
 } as const;
