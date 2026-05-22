@@ -74,8 +74,8 @@ export default function Hero() {
                 }}
               />
             ))}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-              <span className="text-white/0 group-hover:text-white/90 text-sm font-medium transition-all duration-300 bg-black/50 px-4 py-2 rounded-full">
+            <div className="absolute top-2 right-2">
+              <span className="text-white text-xs font-medium bg-black/60 px-3 py-1.5 rounded-full backdrop-blur-sm">
                 Draw this →
               </span>
             </div>
