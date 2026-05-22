@@ -23,18 +23,19 @@ export default function PlayPage() {
   const t = useT();
   const router = useRouter();
   const [uploadedImages, setUploadedImages] = useState<PlayImage[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [uploadTitle, setUploadTitle] = useState('');
   const [uploadDesc, setUploadDesc] = useState('');
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  // Carga las imágenes subidas por usuarios al montar el componente
   useEffect(() => {
     fetch('/api/play/images')
       .then((r) => r.json())
       .then((data) => setUploadedImages(Array.isArray(data) ? data : []))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
   // Redirige a /create con la imagen seleccionada como remixUrl
@@ -99,8 +100,17 @@ export default function PlayPage() {
 
       </div>
 
-      {/* Sección: imágenes subidas por usuarios (si hay alguna) */}
-      {uploadedImages.length > 0 && (
+      {/* Loading skeleton */}
+      {loading && (
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-12">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="aspect-[4/3] rounded-2xl bg-zinc-900 animate-pulse border border-dark-glass-border/50" />
+          ))}
+        </div>
+      )}
+
+      {/* Sección: imágenes subidas por usuarios */}
+      {!loading && uploadedImages.length > 0 && (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-12">
             {uploadedImages.map((img) => (
