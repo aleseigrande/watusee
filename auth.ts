@@ -76,6 +76,7 @@ export const {
   pages: {
     signIn: "/login",
   },
+  secret: process.env.AUTH_SECRET,
   providers,
   callbacks: {
     async signIn({ user, account }) {
