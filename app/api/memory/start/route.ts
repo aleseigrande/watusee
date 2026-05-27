@@ -44,6 +44,7 @@ export async function GET(req: Request) {
   // Deduplicate by originalImage so no two cards show the same original
   const seenImages = new Set<string>();
   const uniquePosts = allPosts.filter((p) => {
+    if (!p.originalImage || !p.interpretedImage) return false;
     if (seenImages.has(p.originalImage)) return false;
     seenImages.add(p.originalImage);
     return true;

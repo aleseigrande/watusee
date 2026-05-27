@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
+import { auth } from "@/auth";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,18 +26,19 @@ export const viewport = {
   viewportFit: 'cover',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html
       lang="en"
       className={`${inter.variable} dark antialiased h-full`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-brand-primary/30 selection:text-white">
-        <Providers>
+        <Providers session={session}>
           <Navbar />
           <main className="flex-1 flex flex-col w-full">
             {children}

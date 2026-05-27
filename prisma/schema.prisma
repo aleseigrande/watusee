@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -38,6 +38,10 @@ model User {
   memorySessions     MemoryGameSession[]
   dailyPareidoliaEntries DailyPareidoliaEntry[]
   dailyPareidoliaLikes   DailyPareidoliaLike[]
+  blindBlowupGames       BlindBlowupGame[]
+  mindReaderChallenges   MindReaderChallenge[]
+  mindReaderAttempts     MindReaderAttempt[]
+  mindReaderReactions    MindReaderReaction[]
 }
 
 model Post {
@@ -279,6 +283,79 @@ model MemoryGameSession {
   time      Int      @default(0)     // seconds
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model BlindBlowupGame {
+  id          String   @id @default(cuid())
+  imageUrl    String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  guess       String
+  timeSeconds Float
+  difficulty  String   @default("medium")
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model MindReaderChallenge {
+  id          String              @id @default(cuid())
+  title       String
+  creatorId   String
+  creator     User                @relation(fields: [creatorId], references: [id])
+  rounds      MindReaderRound[]
+  attempts    MindReaderAttempt[]
+  reactions   MindReaderReaction[]
+  averageScore Float              @default(0)
+  playCount   Int                 @default(0)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+model MindReaderRound {
+  id            String              @id @default(cuid())
+  challengeId   String
+  challenge     MindReaderChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  clue          String
+  correctIndex  Int
+  explanation   String?
+  image0        String
+  image1        String
+  image2        String
+  roundNumber   Int
+  answers       MindReaderAnswer[]
+}
+
+model MindReaderAttempt {
+  id          String              @id @default(cuid())
+  challengeId String
+  challenge   MindReaderChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  playerId    String
+  player      User                @relation(fields: [playerId], references: [id])
+  answers     MindReaderAnswer[]
+  score       Int                 @default(0)
+  completed   Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+}
+
+model MindReaderAnswer {
+  id          String             @id @default(cuid())
+  attemptId   String
+  attempt     MindReaderAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  roundId     String
+  round       MindReaderRound    @relation(fields: [roundId], references: [id])
+  chosenIndex Int
+  correct     Boolean
+}
+
+model MindReaderReaction {
+  id          String              @id @default(cuid())
+  challengeId String
+  challenge   MindReaderChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User                @relation(fields: [userId], references: [id])
+  type        String              @default("like")
+  createdAt   DateTime            @default(now())
+  @@unique([challengeId, userId, type])
 }
 
 model DailyPareidolia {

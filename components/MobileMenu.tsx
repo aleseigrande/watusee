@@ -51,6 +51,14 @@ export default function MobileMenu({ session }: MobileMenuProps) {
               <PlusCircle className="h-5 w-5 text-brand-primary" />
               <span className="font-medium">{t('mobile.create')}</span>
             </Link>
+            <Link
+              href="/about"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+            >
+              <Image className="h-5 w-5 text-brand-accent" />
+              <span className="font-medium">{t('about.nav')}</span>
+            </Link>
             <div className="h-px bg-dark-glass-border my-2" />
             {session?.user ? (
               <>

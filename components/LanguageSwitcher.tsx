@@ -7,6 +7,7 @@ import { useLang } from '@/lib/i18n/context';
 const languages = [
   { code: 'EN' as const, labelKey: 'lang.en' },
   { code: 'ES' as const, labelKey: 'lang.es' },
+  { code: 'IT' as const, labelKey: 'lang.it' },
   { code: 'ZH' as const, labelKey: 'lang.zh' },
   { code: 'KO' as const, labelKey: 'lang.ko' },
   { code: 'RU' as const, labelKey: 'lang.ru' },

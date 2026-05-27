@@ -33,9 +33,10 @@ export default function MemoryGame() {
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
   const [isChecking, setIsChecking] = useState(false);
-  const [matchData, setMatchData] = useState<CardData | null>(null);
+  const [matchPair, setMatchPair] = useState<{ original: CardData | null; interpretation: CardData | null } | null>(null);
   const [showMatch, setShowMatch] = useState(false);
   const [error, setError] = useState('');
+  const [imgErrors, setImgErrors] = useState<Set<string>>(new Set());
   const startTimeRef = useRef<number>(0);
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
@@ -69,6 +70,15 @@ export default function MemoryGame() {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, []);
 
+  useEffect(() => {
+    if (phase === 'end' || phase === 'menu') {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = undefined;
+      }
+    }
+  }, [phase]);
+
   const handleCardClick = useCallback((cardId: string) => {
     if (isChecking || flipped.includes(cardId) || matched.includes(cardId)) return;
     if (flipped.length === 1 && flipped[0] === cardId) return;
@@ -84,24 +94,31 @@ export default function MemoryGame() {
 
       if (card1.pairId === card2.pairId && card1.type !== card2.type) {
         // Match!
+        const oldMatched = matched.length;
         setTimeout(() => {
           setMatched(prev => [...prev, first, second]);
-          setScore(prev => prev + 100 + Math.max(0, 50 - Math.floor(timer / 10)));
+          setScore(prev => prev + 100 + Math.max(0, 50 - Math.floor((Date.now() - startTimeRef.current) / 10000)));
           setFlipped([]);
           setIsChecking(false);
           // Show match popup
-          setMatchData(card1);
+          const orig = cards.find(c => c.pairId === card1.pairId && c.type === 'original');
+          const interp = cards.find(c => c.pairId === card1.pairId && c.type === 'interpretation');
+          setMatchPair({ original: orig || null, interpretation: interp || null });
           setShowMatch(true);
           // Check if game complete
-          if (matched.length + 2 >= cards.length) {
+          if (oldMatched + 2 >= cards.length) {
             if (timerRef.current) clearInterval(timerRef.current);
+            timerRef.current = undefined;
+            const finalTime = Math.floor((Date.now() - startTimeRef.current) / 1000);
+            setTimer(finalTime);
+            // Save score
+            const finalScore = score + 100;
             setTimeout(() => {
               setPhase('end');
-              // Save score
               fetch('/api/memory/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pairs: difficulty, matched: matched.length / 2 + 1, score: score + 100, time: timer }),
+                body: JSON.stringify({ pairs: difficulty, matched: difficulty, score: finalScore, time: finalTime }),
               }).catch(() => {});
             }, 1500);
           }
@@ -218,7 +235,7 @@ export default function MemoryGame() {
       </div>
 
       {/* Match popup */}
-      {showMatch && matchData && (
+      {showMatch && matchPair && matchPair.original && matchPair.interpretation && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={() => setShowMatch(false)}>
           <div className="bg-zinc-900 rounded-3xl p-6 max-w-sm w-full border border-brand-primary/30 shadow-[0_0_40px_rgba(5,150,105,0.15)]" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-2 text-brand-primary mb-4 justify-center">
@@ -228,17 +245,33 @@ export default function MemoryGame() {
             <div className="grid grid-cols-2 gap-2 mb-4">
               <div className="aspect-square rounded-xl overflow-hidden bg-zinc-800">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={matchData.imageUrl} alt="" className="w-full h-full object-cover" />
+                <img
+                  src={matchPair.original.imageUrl}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  onError={() => setImgErrors(prev => new Set(prev).add(matchPair.original!.id))}
+                />
+                {imgErrors.has(matchPair.original.id) && (
+                  <div className="w-full h-full flex items-center justify-center text-gray-500 text-xs">Image not available</div>
+                )}
                 <div className="text-[10px] text-gray-500 text-center py-1 bg-black/60">Original</div>
               </div>
               <div className="aspect-square rounded-xl overflow-hidden bg-zinc-800">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={cards.find(c => c.pairId === matchData.pairId && c.type === 'interpretation')?.imageUrl || ''} alt="" className="w-full h-full object-cover" />
-                <div className="text-[10px] text-gray-500 text-center py-1 bg-black/60">Interpretation</div>
+                <img
+                  src={matchPair.interpretation.imageUrl}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  onError={() => setImgErrors(prev => new Set(prev).add(matchPair.interpretation!.id))}
+                />
+                {imgErrors.has(matchPair.interpretation.id) && (
+                  <div className="w-full h-full flex items-center justify-center text-gray-500 text-xs">Image not available</div>
+                )}
+                <div className="text-[10px] text-gray-500 text-center py-1 bg-black/60">Drawing</div>
               </div>
             </div>
-            <p className="text-white font-bold text-sm text-center mb-1">{matchData.title}</p>
-            <p className="text-gray-500 text-xs text-center mb-4">by @{matchData.author.username}</p>
+            <p className="text-white font-bold text-sm text-center mb-1">{matchPair.original.title}</p>
+            <p className="text-gray-500 text-xs text-center mb-4">by @{matchPair.original.author.username}</p>
             <div className="flex justify-center gap-3">
               <button className="text-gray-400 hover:text-brand-primary transition-colors p-2"><Heart className="w-4 h-4" /></button>
               <button className="text-gray-400 hover:text-brand-primary transition-colors p-2"><Repeat2 className="w-4 h-4" /></button>
@@ -282,7 +315,10 @@ export default function MemoryGame() {
                   style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={card.imageUrl} alt="" className="w-full h-full object-cover" />
+                  <img src={card.imageUrl} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.classList.add('img-error'); }} />
+                  <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs px-2 text-center hidden [.img-error_&]:flex">
+                    {card.type === 'original' ? 'No image' : 'No image'}
+                  </div>
                   <div className={`absolute bottom-0 left-0 right-0 text-[10px] text-center py-1.5 ${card.type === 'original' ? 'bg-brand-primary/80' : 'bg-purple-500/80'} text-white font-bold uppercase tracking-wider`}>
                     {card.type === 'original' ? 'Original' : 'Drawing'}
                   </div>

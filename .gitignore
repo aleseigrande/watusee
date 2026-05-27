@@ -43,6 +43,7 @@ yarn-error.log*
 *.db
 prisma/dev.db
 dev.db
+/data/
 
 # zips / backups
 *.zip

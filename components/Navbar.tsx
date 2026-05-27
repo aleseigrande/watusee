@@ -88,6 +88,9 @@ export default async function Navbar() {
               <span><T id="nav.adults" /></span>
             </Link>
           )}
+          <Link href="/about" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
+            <span><T id="about.nav" /></span>
+          </Link>
         </div>
 
         {/* Actions */}

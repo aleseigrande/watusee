@@ -76,11 +76,11 @@ export default function Hero() {
                 }}
               />
             ))}
-            <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/60 px-3 py-1.5 rounded-full backdrop-blur-sm">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-black/60 px-4 py-2.5 rounded-full backdrop-blur-sm border border-white/10 shadow-lg">
+              <span className="text-white text-sm font-semibold whitespace-nowrap">{t('hero.draw')}</span>
               <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
-              <span className="text-white text-xs font-medium">{t('hero.draw')}</span>
             </div>
           </button>
         ) : null}

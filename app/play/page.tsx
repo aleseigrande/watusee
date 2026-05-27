@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, Gamepad2, BookOpen, Eye, Radio, Layers, Sparkles } from 'lucide-react';
+import { ArrowLeft, Gamepad2, BookOpen, Eye, Radio, Layers, Sparkles, ScanEye, Brain } from 'lucide-react';
 import Link from 'next/link';
 import { useT } from '@/lib/i18n/context';
 
@@ -10,6 +10,8 @@ const games = [
   { id: 4, titleKey: 'games.echo.title', descKey: 'games.echo.desc', icon: <Eye className="w-8 h-8 text-purple-400" />, href: '/echo' },
   { id: 5, titleKey: 'games.resonance.title', descKey: 'games.resonance.desc', icon: <Radio className="w-8 h-8 text-amber-400" />, href: '/resonance' },
   { id: 6, titleKey: 'games.memory.title', descKey: 'games.memory.desc', icon: <Layers className="w-8 h-8 text-brand-primary" />, href: '/memory' },
+  { id: 7, titleKey: 'games.blind.title', descKey: 'games.blind.desc', icon: <ScanEye className="w-8 h-8 text-cyan-400" />, href: '/blind-blowup' },
+  { id: 8, titleKey: 'games.mindreader.title', descKey: 'games.mindreader.desc', icon: <Brain className="w-8 h-8 text-purple-400" />, href: '/mind-reader' },
 ];
 
 export default function PlayPage() {

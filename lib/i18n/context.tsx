@@ -6,17 +6,18 @@ import { es } from './es';
 import { zh } from './zh';
 import { ko } from './ko';
 import { ru } from './ru';
+import { it } from './it';
 
-type Lang = 'EN' | 'ES' | 'ZH' | 'KO' | 'RU';
+type Lang = 'EN' | 'ES' | 'ZH' | 'KO' | 'RU' | 'IT';
 
-const translations: Record<Lang, Record<string, string>> = { EN: en, ES: es, ZH: zh, KO: ko, RU: ru };
+const translations: Record<Lang, Record<string, string>> = { EN: en, ES: es, ZH: zh, KO: ko, RU: ru, IT: it };
 
-const langMap: Record<Lang, string> = { EN: 'en', ES: 'es', ZH: 'zh', KO: 'ko', RU: 'ru' };
+const langMap: Record<Lang, string> = { EN: 'en', ES: 'es', ZH: 'zh', KO: 'ko', RU: 'ru', IT: 'it' };
 
 interface LangContextType {
   lang: Lang;
   setLang: (lang: Lang) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string>) => string;
 }
 
 const LangContext = createContext<LangContextType | null>(null);

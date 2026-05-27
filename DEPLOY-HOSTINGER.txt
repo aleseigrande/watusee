@@ -1,0 +1,83 @@
+# Filename: DEPLOY-HOSTINGER.txt
+
+# ===== PASO 1: Subir archivos al hosting =====
+# Usa FTP (FileZilla o similar) para subir TODOS estos archivos
+# a la raíz del hosting (public_html/ o la carpeta que asigne Hostinger).
+#
+# IMPORTANTE: NO subas node_modules/ ni .next/ — se generarán en el servidor.
+
+# Archivos a subir (todo el proyecto excepto lo ignorado por .gitignore):
+# - app/
+# - components/
+# - lib/
+# - prisma/ (schema.prisma y seed.ts)
+# - public/ (uploads, play, hero)
+# - package.json
+# - package-lock.json
+# - tsconfig.json
+# - next.config.ts
+# - postcss.config.mjs
+# - tailwind.config.ts (si existe)
+# - eslint.config.mjs
+# - auth.ts
+# - proxy.ts
+# - AGENTS.md
+# - CLAUDE.md
+# - .env.production.example
+
+# ===== PASO 2: Activar Node.js en hPanel =====
+# 1. Entra a hPanel → Hosting → Administrar → Node.js
+# 2. Crea una nueva aplicación Node.js:
+#    - Domain/Subdomain: whatusee.fun
+#    - Document root: (el directorio donde subiste los archivos)
+#    - Node.js version: 20.x
+#    - Mode: Production
+#    - Entry point: npm run start
+# 3. Haz clic en "Create"
+
+# ===== PASO 3: Variables de entorno =====
+# En la misma sección Node.js, ve a "Environment Variables" y añade:
+#
+#  Name: DATABASE_URL
+#  Value: file:./prod.db
+#
+#  Name: AUTH_SECRET
+#  Value: (genera una cadena larga aleatoria, ej: openssl rand -base64 32)
+#
+#  Name: NODE_ENV
+#  Value: production
+
+# ===== PASO 4: SSH y construir =====
+# 1. Ve a hPanel → Advanced → SSH Access → Activar
+# 2. Conéctate por SSH:
+#    ssh u123456789@whatusee.fun
+# 3. Navega a la carpeta del proyecto:
+#    cd public_html  (o la carpeta que Hostinger asigne)
+#
+# 4. Instala dependencias:
+#    npm install
+#
+# 5. Genera Prisma Client + crea DB:
+#    npx prisma generate
+#    npx prisma db push
+#
+# 6. Construye la app:
+#    npm run build
+#
+# 7. (Opcional) Pobla DB con datos iniciales:
+#    npm run seed
+#
+# 8. Sal de SSH:
+#    exit
+
+# ===== PASO 5: Iniciar la app =====
+# 1. En hPanel → Node.js → tu app → haz clic en "Start" o "Restart"
+# 2. Espera unos segundos y visita https://whatusee.fun
+# 3. Para ver logs: hPanel → Node.js → Logs
+
+# ===== PASO 6: Próximos pasos (opcional) =====
+# Para futuro: migrar de SQLite a MySQL:
+# 1. Crea DB en hPanel → MySQL Databases
+# 2. Actualiza DATABASE_URL: mysql://user:pass@host:port/dbname
+# 3. Corre: npx prisma db push
+# 4. El seed generará datos limpios

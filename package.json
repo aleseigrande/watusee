@@ -4,33 +4,35 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "prebuild": "node -e \"if(process.platform!=='win32'){const{execSync}=require('child_process');try{execSync('npm install --no-package-lock --include=optional',{stdio:'inherit'})}catch(e){}try{execSync('npx prisma generate',{stdio:'inherit'})}catch(e){}try{execSync('npx prisma db push',{stdio:'inherit'})}catch(e){}execSync('chmod -R 755 .',{stdio:'inherit'})}\"",
+    "build": "node setup-db.js && npx next build --webpack",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@prisma/client": "^5.11.0",
+    "@prisma/client": "^5.22.0",
+    "@tailwindcss/postcss": "^4",
     "bcryptjs": "^3.0.3",
     "lucide-react": "^1.14.0",
     "next": "16.2.4",
     "next-auth": "^5.0.0-beta.31",
+    "prisma": "^5.22.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "sharp": "^0.33.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
-    "prisma": "^5.11.0",
-    "tailwindcss": "^4",
-    "tsx": "^4.22.3",
-    "typescript": "^5"
+    "tsx": "^4.22.3"
   }
 }

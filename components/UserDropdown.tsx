@@ -23,6 +23,7 @@ interface UserData {
   username: string;
   email: string | null;
   image: string | null;
+  isAdult: boolean;
   stats: UserStats;
 }
 

@@ -67,8 +67,9 @@ export async function GET() {
 
     const now = new Date();
     const revealed = now >= tomorrowStart;
-    const userEntry = session?.user?.id
-      ? challenge.entries.find((e) => e.userId === session.user.id) || null
+    const userId = session?.user?.id;
+    const userEntry = userId
+      ? challenge.entries.find((e) => e.userId === userId) || null
       : null;
 
     const entries = challenge.entries.map((e) => ({
@@ -78,7 +79,7 @@ export async function GET() {
       userImage: e.user.image,
       interpretation: revealed ? e.interpretation : e.userId === session?.user?.id ? e.interpretation : null,
       likes: e.likes,
-      likedByMe: session?.user?.id ? e.likedBy.some((l) => l.userId === session.user.id) : false,
+      likedByMe: userId ? e.likedBy.some((l) => l.userId === userId) : false,
     }));
 
     return NextResponse.json({
