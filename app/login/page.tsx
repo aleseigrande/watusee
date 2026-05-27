@@ -34,17 +34,29 @@ function LoginForm() {
     setError('');
 
     try {
-      const res = await signIn('credentials', {
-        username,
-        password,
-        redirect: false,
+      // Fetch CSRF token, then POST directly to credentials callback
+      const csrfRes = await fetch('/api/auth/csrf');
+      const { csrfToken } = await csrfRes.json();
+
+      const res = await fetch('/api/auth/callback/credentials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          csrfToken,
+          username,
+          password,
+          callbackUrl: '/',
+          json: 'true',
+        }),
       });
 
-      if (res?.error) {
-        setError(t('login.error.bad'));
-      } else {
+      const data = await res.json();
+
+      if (data.url) {
         router.push('/');
         router.refresh();
+      } else {
+        setError(t('login.error.bad'));
       }
     } catch {
       setError(t('login.error.generic'));
