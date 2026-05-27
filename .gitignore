@@ -48,7 +48,7 @@ dev.db
 # zips / backups
 *.zip
 whatUseeChatgtp/
-start.js
+# start.js is the entry point for Hostinger
 
 # logs
 server.log
