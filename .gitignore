@@ -48,6 +48,7 @@ dev.db
 # zips / backups
 *.zip
 whatUseeChatgtp/
+start.js
 
 # logs
 server.log
