@@ -34,31 +34,26 @@ function LoginForm() {
     setError('');
 
     try {
-      // Fetch CSRF token, then POST directly to credentials callback
-      const csrfRes = await fetch('/api/auth/csrf');
-      const { csrfToken } = await csrfRes.json();
-
-      const res = await fetch('/api/auth/callback/credentials', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          csrfToken,
-          username,
-          password,
-          callbackUrl: '/',
-          json: 'true',
-        }),
+      const res = await signIn('credentials', {
+        username,
+        password,
+        redirect: false,
       });
 
-      const data = await res.json();
-
-      if (data.url) {
+      if (res?.error) {
+        if (res.error === 'CredentialsSignin') {
+          setError(t('login.error.bad'));
+        } else {
+          setError(t('login.error.generic') + ' (' + res.error + ')');
+        }
+      } else if (res?.ok) {
         router.push('/');
         router.refresh();
       } else {
-        setError(t('login.error.bad'));
+        setError(t('login.error.generic'));
       }
-    } catch {
+    } catch (e) {
+      console.error('Login error:', e);
       setError(t('login.error.generic'));
     } finally {
       setIsLoading(false);
