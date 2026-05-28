@@ -49,4 +49,36 @@ if (domainMatch) {
   }
 }
 
+// Restore persistent uploads to public/ so they survive redeploys
+function getDataDir() {
+  const dbUrl = process.env.DATABASE_URL;
+  if (dbUrl && dbUrl.startsWith('file:/')) {
+    return path.dirname(dbUrl.slice(5));
+  }
+  if (domainMatch) {
+    return path.join(domainMatch[0], 'data');
+  }
+  return path.join(cwd, 'data');
+}
+
+function restoreUploads(subDir) {
+  const srcDir = path.join(getDataDir(), 'uploads', subDir);
+  const destDir = path.join(cwd, 'public', subDir);
+  if (!fs.existsSync(srcDir)) return;
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir, { recursive: true });
+  }
+  const files = fs.readdirSync(srcDir);
+  for (const file of files) {
+    const src = path.join(srcDir, file);
+    const dest = path.join(destDir, file);
+    if (fs.statSync(src).isFile() && !fs.existsSync(dest)) {
+      fs.copyFileSync(src, dest);
+      console.log(`[setup-db] Restored upload: ${subDir}/${file}`);
+    }
+  }
+}
+
+restoreUploads('play/uploads');
+
 // next build --webpack runs separately in the build script after this

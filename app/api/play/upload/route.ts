@@ -5,6 +5,21 @@ import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 
+function getDataDir(): string {
+  const dbUrl = process.env.DATABASE_URL;
+  if (dbUrl && dbUrl.startsWith('file:/')) {
+    return path.dirname(dbUrl.slice(5));
+  }
+  const home = process.env.HOME || '/home';
+  const cwd = process.cwd();
+  const escapedHome = home.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const domainMatch = cwd.match(new RegExp(`^${escapedHome}/domains/[^/]+`));
+  if (domainMatch) {
+    return path.join(domainMatch[0], 'data');
+  }
+  return path.join(cwd, 'data');
+}
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -21,14 +36,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Faltan campos requeridos' }, { status: 400 });
     }
 
-    const uploadsDir = path.join(process.cwd(), 'public', 'play', 'uploads');
-    try { await fs.access(uploadsDir); } catch { await fs.mkdir(uploadsDir, { recursive: true }); }
-
     const ext = file.name.split('.').pop() || 'jpg';
     const filename = `play-${crypto.randomBytes(8).toString('hex')}.${ext}`;
-    const filepath = path.join(uploadsDir, filename);
     const buffer = Buffer.from(await file.arrayBuffer());
-    await fs.writeFile(filepath, buffer);
+
+    // Save to public dir for immediate serving
+    const publicDir = path.join(process.cwd(), 'public', 'play', 'uploads');
+    try { await fs.access(publicDir); } catch { await fs.mkdir(publicDir, { recursive: true }); }
+    await fs.writeFile(path.join(publicDir, filename), buffer);
+
+    // Save to persistent data dir for redeploy survival
+    const persistentDir = path.join(getDataDir(), 'uploads', 'play');
+    try { await fs.access(persistentDir); } catch { await fs.mkdir(persistentDir, { recursive: true }); }
+    await fs.writeFile(path.join(persistentDir, filename), buffer);
+
     const imageUrl = `/play/uploads/${filename}`;
 
     const playImage = await prisma.playImage.create({
