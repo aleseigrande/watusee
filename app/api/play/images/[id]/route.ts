@@ -23,9 +23,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'No tienes permiso para borrar esta imagen' }, { status: 403 });
     }
 
-    // Contar cuántos posts usan esta imagen (remixes)
+    // Contar cuántos posts usan esta imagen como original (remixes)
     const remixCount = await prisma.post.count({
-      where: { remixUrl: image.imageUrl },
+      where: { originalImage: image.imageUrl },
     });
 
     // No borramos el archivo físico si hay remixes, para no romper dibujos existentes
