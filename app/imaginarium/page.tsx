@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Sparkles, PenTool, ArrowLeft, Upload, X } from 'lucide-react';
+import { Sparkles, PenTool, ArrowLeft, Upload, X, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useT } from '@/lib/i18n/context';
+import { useSession } from 'next-auth/react';
 
 // Una imagen subida por usuarios en la página Play (para que otros dibujen sobre ella)
 interface PlayImage {
@@ -12,7 +13,7 @@ interface PlayImage {
   title: string;
   description: string;
   imageUrl: string;
-  author: { username: string };
+  author: { id: string; username: string };
   createdAt: string;
 }
 
@@ -22,6 +23,7 @@ interface PlayImage {
 export default function PlayPage() {
   const t = useT();
   const router = useRouter();
+  const { data: session } = useSession();
   const [uploadedImages, setUploadedImages] = useState<PlayImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -37,6 +39,26 @@ export default function PlayPage() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  // Borra una imagen propia
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (!confirm(t('imaginarium.deleteConfirm'))) return;
+    try {
+      const res = await fetch(`/api/play/images/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (res.ok) {
+        setUploadedImages((prev) => prev.filter((img) => img.id !== id));
+        if (data.remixCount > 0) {
+          alert(`${data.remixCount} drawing(s) using this image are kept safe.`);
+        }
+      } else {
+        alert(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // Redirige a /create con la imagen seleccionada como remixUrl
   const handlePlay = (src: string) => {
@@ -141,6 +163,15 @@ export default function PlayPage() {
                       <span className="sm:inline">{t('play.draw')}</span>
                     </span>
                   </div>
+                  {session?.user?.id === img.author.id && (
+                    <button
+                      onClick={(e) => handleDelete(e, img.id)}
+                      className="absolute top-2 left-2 sm:top-4 sm:left-4 p-1.5 sm:p-2.5 bg-black/60 hover:bg-red-500 rounded-full text-white transition-all hover:scale-110 z-10"
+                      title={t('imaginarium.delete')}
+                    >
+                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

@@ -191,6 +191,8 @@ export const zh: Record<string, string> = {
   'imaginarium.badge': '上传一张图片，唤醒你想象的力量',
   'imaginarium.upload': '上传',
   'imaginarium.image': '图片',
+  'imaginarium.delete': '删除',
+  'imaginarium.deleteConfirm': '删除这张图片？',
 
   // Daily Challenge
   'daily.title': '每日挑战',

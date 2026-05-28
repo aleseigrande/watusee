@@ -191,6 +191,8 @@ export const ru: Record<string, string> = {
   'imaginarium.badge': 'Загрузите изображение и пробудите силу своего воображения',
   'imaginarium.upload': 'Загрузить',
   'imaginarium.image': 'Изображение',
+  'imaginarium.delete': 'Удалить',
+  'imaginarium.deleteConfirm': 'Удалить это изображение?',
 
   // Daily Challenge
   'daily.title': 'Ежедневный вызов',
