@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
-import path from 'path';
-import fs from 'fs';
-import { getUploadsDir } from '@/lib/uploads';
 
 export async function DELETE(
   req: NextRequest,
@@ -26,19 +23,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'No tienes permiso para borrar esta imagen' }, { status: 403 });
     }
 
-    // Contar cuántos posts usan esta imagen como original (remixes)
     const remixCount = await prisma.post.count({
       where: { originalImage: image.imageUrl },
     });
-
-    // Borrar archivo físico solo si no hay remixes
-    if (remixCount === 0) {
-      const filename = path.basename(image.imageUrl);
-      const filePath = path.join(getUploadsDir('play'), filename);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-    }
 
     await prisma.playImage.delete({ where: { id } });
 
