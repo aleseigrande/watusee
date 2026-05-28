@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Sparkles, PenTool, ArrowLeft, Upload, X, Trash2 } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { Sparkles, PenTool, ArrowLeft, Upload, X, Trash2, Camera } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useT } from '@/lib/i18n/context';
@@ -24,6 +24,7 @@ export default function PlayPage() {
   const t = useT();
   const router = useRouter();
   const { data: session } = useSession();
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const [uploadedImages, setUploadedImages] = useState<PlayImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -216,11 +217,29 @@ export default function PlayPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-1">{t('imaginarium.image')}</label>
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+                    className="flex-1 text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary file:text-white hover:file:bg-brand-primary/80"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => cameraInputRef.current?.click()}
+                    className="p-2 bg-zinc-800 hover:bg-brand-primary rounded-xl text-gray-300 hover:text-white transition-colors border border-dark-glass-border"
+                    title={t('imaginarium.camera')}
+                  >
+                    <Camera className="w-5 h-5" />
+                  </button>
+                </div>
                 <input
+                  ref={cameraInputRef}
                   type="file"
                   accept="image/*"
+                  capture="environment"
                   onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                  className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary file:text-white hover:file:bg-brand-primary/80"
+                  className="hidden"
                 />
               </div>
             </div>

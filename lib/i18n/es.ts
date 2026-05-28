@@ -189,6 +189,7 @@ export const es: Record<string, string> = {
   'imaginarium.badge': 'Sube una imagen y despierta el poder de tu imaginación',
   'imaginarium.upload': 'Subir',
   'imaginarium.image': 'Imagen',
+  'imaginarium.camera': 'Cámara',
   'imaginarium.delete': 'Eliminar',
   'imaginarium.deleteConfirm': '¿Eliminar esta imagen?',
 

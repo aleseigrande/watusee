@@ -191,6 +191,7 @@ export const ko: Record<string, string> = {
   'imaginarium.badge': '이미지를 업로드하고 상상력의 힘을 깨우세요',
   'imaginarium.upload': '업로드',
   'imaginarium.image': '이미지',
+  'imaginarium.camera': '카메라',
   'imaginarium.delete': '삭제',
   'imaginarium.deleteConfirm': '이 이미지를 삭제하시겠습니까?',
 

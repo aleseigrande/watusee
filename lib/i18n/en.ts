@@ -202,6 +202,7 @@ export const en = {
   'imaginarium.badge': 'Upload an image and awaken the power of your imagination',
   'imaginarium.upload': 'Upload',
   'imaginarium.image': 'Image',
+  'imaginarium.camera': 'Camera',
   'imaginarium.delete': 'Delete',
   'imaginarium.deleteConfirm': 'Delete this image?',
 

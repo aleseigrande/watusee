@@ -66,7 +66,7 @@ export default async function Navbar() {
         <Link href="/" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="WatUSee" className="h-9 w-auto" />
-          <span className="text-2xl font-bold tracking-tighter text-gradient">WatUSee</span>
+          <span className="hidden sm:inline text-2xl font-bold tracking-tighter text-gradient">WatUSee</span>
         </Link>
 
         {/* Search Bar */}
