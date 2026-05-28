@@ -2,20 +2,19 @@
 
 import { useState, Suspense, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useT } from '@/lib/i18n/context';
 
 function LoginForm() {
   const t = useT();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [csrfToken, setCsrfToken] = useState('');
   const [oauthProviders, setOauthProviders] = useState<string[]>([]);
 
   useEffect(() => {
@@ -23,43 +22,16 @@ function LoginForm() {
       .then(r => r.json())
       .then(d => setOauthProviders(d.providers))
       .catch(() => {});
+    fetch('/api/auth/csrf')
+      .then(r => r.json())
+      .then(d => setCsrfToken(d.csrfToken))
+      .catch(() => {});
   }, []);
 
   const registered = searchParams.get('registered');
   const oauthError = searchParams.get('error') === 'oauth';
   const noEmailError = searchParams.get('error') === 'no_email';
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const res = await signIn('credentials', {
-        username,
-        password,
-        redirect: false,
-      });
-
-      if (res?.error) {
-        if (res.error === 'CredentialsSignin') {
-          setError(t('login.error.bad'));
-        } else {
-          setError(t('login.error.generic') + ' (' + res.error + ')');
-        }
-      } else if (res?.ok) {
-        router.push('/');
-        router.refresh();
-      } else {
-        setError(t('login.error.generic'));
-      }
-    } catch (e) {
-      console.error('Login error:', e);
-      setError(t('login.error.generic'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const callbackError = searchParams.get('error');
 
   const handleOAuth = async (provider: string) => {
     setError('');
@@ -89,17 +61,26 @@ function LoginForm() {
         </div>
       )}
 
+      {callbackError === 'CredentialsSignin' && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg mb-6 text-sm">
+          {t('login.error.bad')}
+        </div>
+      )}
+
       {error && (
         <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg mb-6 text-sm">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <form id="login-form" action="/api/auth/callback/credentials" method="POST" className="flex flex-col gap-5">
+        <input type="hidden" name="csrfToken" value={csrfToken} />
+        <input type="hidden" name="callbackUrl" value="/" />
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium text-gray-300">{t('login.user.label')}</label>
           <input
             type="text"
+            name="username"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -113,6 +94,7 @@ function LoginForm() {
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
+              name="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -131,10 +113,9 @@ function LoginForm() {
 
         <button
           type="submit"
-          disabled={isLoading}
-          className="mt-2 bg-brand-primary hover:bg-brand-primary/90 text-white py-3 rounded-full font-bold shadow-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+          className="mt-2 bg-brand-primary hover:bg-brand-primary/90 text-white py-3 rounded-full font-bold shadow-lg flex items-center justify-center gap-2 transition-colors"
         >
-          {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('login.button')}
+          {t('login.button')}
         </button>
       </form>
 
