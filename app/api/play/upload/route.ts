@@ -5,6 +5,17 @@ import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 
+function getDataDir() {
+  if (process.env.DATABASE_URL?.startsWith('file:/')) {
+    const dbPath = process.env.DATABASE_URL.slice(5);
+    return path.join(path.dirname(dbPath), 'uploads', 'play');
+  }
+  const cwd = process.cwd();
+  const match = cwd.match(/^(\/home\/[^/]+\/domains\/[^/]+)/);
+  if (match) return path.join(match[1], 'data', 'uploads', 'play');
+  return null;
+}
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -29,6 +40,13 @@ export async function POST(req: Request) {
     const filepath = path.join(uploadsDir, filename);
     const buffer = Buffer.from(await file.arrayBuffer());
     await fs.writeFile(filepath, buffer);
+
+    const dataDir = getDataDir();
+    if (dataDir) {
+      try { await fs.access(dataDir); } catch { await fs.mkdir(dataDir, { recursive: true }); }
+      await fs.writeFile(path.join(dataDir, filename), buffer);
+    }
+
     const imageUrl = `/play/uploads/${filename}`;
 
     const playImage = await prisma.playImage.create({

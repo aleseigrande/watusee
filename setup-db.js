@@ -49,4 +49,41 @@ if (domainMatch) {
   }
 }
 
+function restoreUploads() {
+  const cwd = process.cwd();
+  const home = process.env.HOME || '/home';
+  const escapedHome = home.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const domainMatch = cwd.match(new RegExp(`^${escapedHome}/domains/[^/]+`));
+  if (!domainMatch) {
+    console.log('[setup-db] Not in a domain path, skipping upload restore');
+    return;
+  }
+  const domainRoot = domainMatch[0];
+  const dataUploadsDir = path.join(domainRoot, 'data', 'uploads', 'play');
+  const publicUploadsDir = path.join(cwd, 'public', 'play', 'uploads');
+
+  if (!fs.existsSync(dataUploadsDir)) {
+    console.log('[setup-db] No data uploads dir to restore');
+    return;
+  }
+
+  if (!fs.existsSync(publicUploadsDir)) {
+    fs.mkdirSync(publicUploadsDir, { recursive: true });
+  }
+
+  const files = fs.readdirSync(dataUploadsDir);
+  let restored = 0;
+  for (const file of files) {
+    const src = path.join(dataUploadsDir, file);
+    const dest = path.join(publicUploadsDir, file);
+    if (!fs.existsSync(dest)) {
+      fs.copyFileSync(src, dest);
+      restored++;
+    }
+  }
+  console.log(`[setup-db] Restored ${restored} uploads from data/ to public/`);
+}
+
+restoreUploads();
+
 // next build --webpack runs separately in the build script after this
