@@ -51,7 +51,7 @@ export default function Hero() {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span className="text-sm sm:text-base font-semibold tracking-widest text-brand-accent uppercase mb-2 block sm:hidden">
+        <span className="text-sm sm:text-base font-semibold tracking-widest text-brand-accent uppercase mb-2 block">
           WatUSee
         </span>
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 text-gradient leading-none">
@@ -88,13 +88,13 @@ export default function Hero() {
           </button>
         ) : null}
 
-        <h2 className="mt-10 sm:mt-14 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+        <h2 className="mt-10 sm:mt-14 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
           <span className="block text-white"><T id="hero.line1" /></span>
           <span className="block text-gradient mt-1 pb-1"><T id="hero.line2" /></span>
           <span className="block text-white"><T id="hero.line3" /></span>
         </h2>
 
-        <p className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl text-gray-400">
+        <p className="mt-6 max-w-2xl mx-auto text-base sm:text-lg text-gray-400">
           <T id="hero.desc" />
         </p>
 
