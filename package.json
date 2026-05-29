@@ -2,6 +2,7 @@
   "name": "watusee",
   "version": "0.1.0",
   "private": true,
+  "engines": { "node": ">=20.9.0" },
   "scripts": {
     "dev": "next dev",
     "prebuild": "node -e \"if(process.platform!=='win32'){const{execSync}=require('child_process');try{execSync('npm install --no-package-lock --include=optional',{stdio:'inherit'})}catch(e){}try{execSync('npx prisma generate',{stdio:'inherit'})}catch(e){}try{execSync('npx prisma db push',{stdio:'inherit'})}catch(e){}execSync('chmod -R 755 .',{stdio:'inherit'})}\"",
