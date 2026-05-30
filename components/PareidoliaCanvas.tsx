@@ -549,7 +549,12 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
     if (offCtx) {
       offCtx.fillStyle = bgColor;
       offCtx.fillRect(0, 0, offscreen.width, offscreen.height);
-      offCtx.drawImage(canvas, 0, 0);
+      if (brushCanvasRef.current) {
+        offCtx.drawImage(brushCanvasRef.current, 0, 0);
+      }
+      for (const s of shapesRef.current) {
+        drawShape(offCtx, s);
+      }
     }
     onSave(image, offscreen.toDataURL('image/png'));
   };
