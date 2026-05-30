@@ -49,6 +49,21 @@ if (domainMatch) {
   }
 }
 
+function restoreDir(dataDir, publicDir) {
+  if (!fs.existsSync(dataDir)) return 0;
+  if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
+  const files = fs.readdirSync(dataDir);
+  let restored = 0;
+  for (const file of files) {
+    const src = path.join(dataDir, file);
+    const dest = path.join(publicDir, file);
+    if (!fs.existsSync(dest)) {
+      try { fs.copyFileSync(src, dest); restored++; } catch {}
+    }
+  }
+  return restored;
+}
+
 function restoreUploads() {
   const cwd = process.cwd();
   const home = process.env.HOME || '/home';
@@ -59,29 +74,21 @@ function restoreUploads() {
     return;
   }
   const domainRoot = domainMatch[0];
-  const dataUploadsDir = path.join(domainRoot, 'data', 'uploads', 'play');
-  const publicUploadsDir = path.join(cwd, 'public', 'play', 'uploads');
+  const dataRoot = path.join(domainRoot, 'data', 'uploads');
 
-  if (!fs.existsSync(dataUploadsDir)) {
-    console.log('[setup-db] No data uploads dir to restore');
-    return;
-  }
+  const pairs = [
+    { data: path.join(dataRoot, 'play'), pub: path.join(cwd, 'public', 'play', 'uploads') },
+    { data: path.join(dataRoot, 'uploads'), pub: path.join(cwd, 'public', 'uploads') },
+    { data: path.join(dataRoot, 'uploads', 'adults'), pub: path.join(cwd, 'public', 'uploads', 'adults') },
+  ];
 
-  if (!fs.existsSync(publicUploadsDir)) {
-    fs.mkdirSync(publicUploadsDir, { recursive: true });
+  let total = 0;
+  for (const p of pairs) {
+    const n = restoreDir(p.data, p.pub);
+    if (n > 0) console.log(`[setup-db] Restored ${n} files to ${p.pub}`);
+    total += n;
   }
-
-  const files = fs.readdirSync(dataUploadsDir);
-  let restored = 0;
-  for (const file of files) {
-    const src = path.join(dataUploadsDir, file);
-    const dest = path.join(publicUploadsDir, file);
-    if (!fs.existsSync(dest)) {
-      fs.copyFileSync(src, dest);
-      restored++;
-    }
-  }
-  console.log(`[setup-db] Restored ${restored} uploads from data/ to public/`);
+  console.log(`[setup-db] Restored ${total} total uploads`);
 }
 
 restoreUploads();

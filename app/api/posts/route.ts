@@ -5,6 +5,17 @@ import path from 'path';
 import crypto from 'crypto';
 import { auth } from '@/auth';
 
+function getDataDir() {
+  if (process.env.DATABASE_URL?.startsWith('file:/')) {
+    const dbPath = process.env.DATABASE_URL.slice(5);
+    return path.join(path.dirname(dbPath), 'uploads');
+  }
+  const cwd = process.cwd();
+  const match = cwd.match(/^(\/home\/[^/]+\/domains\/[^/]+)/);
+  if (match) return path.join(match[1], 'data', 'uploads');
+  return null;
+}
+
 // POST /api/posts — crea un nuevo post (pareidolia).
 // Recibe JSON con: title, description, originalImage (base64), drawnImage (base64),
 // audience ("everyone"|"adults"), remixOfId (opcional).
@@ -32,18 +43,42 @@ export async function POST(req: Request) {
       await fs.mkdir(uploadsDir, { recursive: true });
     }
 
-    // Convierte base64 a archivo PNG y retorna la ruta pública
-    const saveBase64Image = async (base64String: string, prefix: string) => {
-      const base64Data = base64String.replace(/^data:image\/\w+;base64,/, '');
-      const buffer = Buffer.from(base64Data, 'base64');
-      const filename = `${prefix}-${crypto.randomBytes(8).toString('hex')}.png`;
-      const filepath = path.join(uploadsDir, filename);
-      await fs.writeFile(filepath, buffer);
-      return `/${subDir}/${filename}`;
+    // Guarda imagen: si es ruta copia el archivo, si es base64 lo decodifica y escribe
+    const saveImage = async (input: string, prefix: string) => {
+      let relativePath;
+      if (input.startsWith('/')) {
+        const existingPath = path.join(process.cwd(), 'public', input);
+        const ext = path.extname(input) || '.png';
+        const filename = `${prefix}-${crypto.randomBytes(8).toString('hex')}${ext}`;
+        const destPath = path.join(uploadsDir, filename);
+        try {
+          await fs.copyFile(existingPath, destPath);
+        } catch {
+          await fs.writeFile(destPath, input);
+        }
+        relativePath = `/${subDir}/${filename}`;
+      } else {
+        const base64Data = input.replace(/^data:image\/\w+;base64,/, '');
+        const buffer = Buffer.from(base64Data, 'base64');
+        const filename = `${prefix}-${crypto.randomBytes(8).toString('hex')}.png`;
+        const filepath = path.join(uploadsDir, filename);
+        await fs.writeFile(filepath, buffer);
+        relativePath = `/${subDir}/${filename}`;
+      }
+      // Dual save to data/ for persistence across deploys
+      const dataDir = getDataDir();
+      if (dataDir) {
+        const dataSubDir = path.join(dataDir, subDir);
+        try { await fs.access(dataSubDir); } catch { await fs.mkdir(dataSubDir, { recursive: true }); }
+        const filename = path.basename(relativePath);
+        const src = path.join(uploadsDir, filename);
+        try { await fs.copyFile(src, path.join(dataSubDir, filename)); } catch {}
+      }
+      return relativePath;
     };
 
-    const originalImageUrl = await saveBase64Image(originalImage, 'original');
-    const drawnImageUrl = await saveBase64Image(drawnImage, 'drawn');
+    const originalImageUrl = await saveImage(originalImage, 'original');
+    const drawnImageUrl = await saveImage(drawnImage, 'drawn');
 
     const post = await prisma.post.create({
       data: {
