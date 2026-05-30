@@ -106,22 +106,6 @@ export async function POST(req: Request) {
       }
     }
 
-    // Agregar la imagen original al Imaginarium (PlayImage)
-    if (!isAdult) {
-      try {
-        await prisma.playImage.create({
-          data: {
-            title: title || 'Untitled',
-            description: description || '',
-            imageUrl: originalImageUrl,
-            authorId: session.user.id,
-          },
-        });
-      } catch (e) {
-        console.error('Error adding to Imaginarium:', e);
-      }
-    }
-
     return NextResponse.json(post);
   } catch (error) {
     console.error('Error creating post:', error);
