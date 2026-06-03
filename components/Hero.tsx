@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowUp } from 'lucide-react';
 import T from '@/components/T';
 import { useT } from '@/lib/i18n/context';
 
@@ -79,11 +79,9 @@ export default function Hero() {
                 }}
               />
             ))}
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2 bg-black/60 px-4 py-2.5 rounded-full backdrop-blur-sm border border-white/10 shadow-lg">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/60 px-4 py-2.5 rounded-full backdrop-blur-sm border border-white/10 shadow-lg">
               <span className="text-white text-sm font-semibold whitespace-nowrap">{t('hero.draw')}</span>
-              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ArrowUp className="w-4 h-4 text-white" strokeWidth={3} />
             </div>
           </button>
         ) : null}

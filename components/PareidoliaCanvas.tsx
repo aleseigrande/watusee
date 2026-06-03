@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Upload, Eraser, Undo, Save, Trash2, Pencil, Circle, Square, Triangle, X } from 'lucide-react';
+import { Upload, Eraser, Undo, Save, Trash2, Pencil, Circle, Square, Triangle, X, PaintBucket } from 'lucide-react';
 import { useT } from '@/lib/i18n/context';
 
 interface PareidoliaCanvasProps {
@@ -20,6 +20,7 @@ interface ShapeObject {
   height: number;
   color: string;
   lineWidth: number;
+  fill?: string;
 }
 
 const HANDLE_HIT = 10;
@@ -36,6 +37,9 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
   const [color, setColor] = useState('#6B4EFF');
   const [brushSize, setBrushSize] = useState(5);
   const [bgColor, setBgColor] = useState('#000000');
+  const [fillEnabled, setFillEnabled] = useState(false);
+
+  const PRESET_COLORS = ['#FF0000', '#FF6B00', '#FFD700', '#00FF00', '#00BFFF', '#6B4EFF', '#FF69B4', '#FFFFFF', '#888888', '#000000'];
 
   const historyRef = useRef<ImageData[]>([]);
   const shapesRef = useRef<ShapeObject[]>([]);
@@ -153,22 +157,30 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
 
     const { x, y, width: w, height: h } = s;
 
-    if (s.type === 'rect') {
-      ctx.strokeRect(x, y, w, h);
-    } else if (s.type === 'circle') {
-      const cx = x + w / 2, cy = y + h / 2;
-      const r = Math.min(Math.abs(w), Math.abs(h)) / 2;
-      ctx.beginPath();
-      ctx.arc(cx, cy, Math.max(r, 1), 0, Math.PI * 2);
-      ctx.stroke();
-    } else if (s.type === 'triangle') {
-      ctx.beginPath();
-      ctx.moveTo(x + w / 2, y);
-      ctx.lineTo(x, y + h);
-      ctx.lineTo(x + w, y + h);
-      ctx.closePath();
-      ctx.stroke();
-    }
+    const doFill = s.fill && s.fill !== 'transparent';
+
+    const drawPath = () => {
+      if (s.type === 'rect') {
+        if (doFill) { ctx.fillStyle = s.fill!; ctx.fillRect(x, y, w, h); }
+        ctx.strokeRect(x, y, w, h);
+      } else if (s.type === 'circle') {
+        const cx = x + w / 2, cy = y + h / 2;
+        const r = Math.min(Math.abs(w), Math.abs(h)) / 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, Math.max(r, 1), 0, Math.PI * 2);
+        if (doFill) { ctx.fillStyle = s.fill!; ctx.fill(); }
+        ctx.stroke();
+      } else if (s.type === 'triangle') {
+        ctx.beginPath();
+        ctx.moveTo(x + w / 2, y);
+        ctx.lineTo(x, y + h);
+        ctx.lineTo(x + w, y + h);
+        ctx.closePath();
+        if (doFill) { ctx.fillStyle = s.fill!; ctx.fill(); }
+        ctx.stroke();
+      }
+    };
+    drawPath();
     ctx.restore();
   };
 
@@ -482,6 +494,7 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
         x, y, width: w, height: h,
         color,
         lineWidth: brushSize,
+        fill: fillEnabled ? color : undefined,
       };
 
       shapesRef.current = [...shapesRef.current, shape];
@@ -608,9 +621,35 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
                 ))}
               </div>
 
+              {tool !== 'brush' && (
+                <button
+                  onClick={() => setFillEnabled(!fillEnabled)}
+                  className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
+                    fillEnabled ? 'bg-brand-primary text-white' : 'bg-black/30 text-gray-400 hover:text-white'
+                  }`}
+                  title={t('canvas.tool.fill')}
+                >
+                  <PaintBucket className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              )}
+
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className="text-[11px] sm:text-sm text-gray-300 hidden sm:inline">{t('canvas.tool.stroke')}</span>
                 <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="w-7 h-7 sm:w-8 sm:h-8 rounded cursor-pointer bg-transparent border-0 p-0" />
+              </div>
+
+              <div className="w-full sm:w-auto flex flex-wrap justify-center gap-1 sm:gap-1.5">
+                {PRESET_COLORS.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setColor(c)}
+                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 transition-all ${
+                      color === c ? 'border-white scale-125' : 'border-transparent hover:scale-110'
+                    }`}
+                    style={{ backgroundColor: c }}
+                    title={c}
+                  />
+                ))}
               </div>
 
               <div className="flex items-center gap-1.5 sm:gap-2">

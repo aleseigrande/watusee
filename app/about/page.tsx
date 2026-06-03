@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useT } from '@/lib/i18n/context';
-import { Loader2, Sparkles, Eye, Heart, Gamepad2, Share2, Radio, Compass, Send } from 'lucide-react';
+import { Loader2, Sparkles, Eye, Heart, Gamepad2, Share2, Radio, Compass, Send, Users, Image, PenTool, BookOpen } from 'lucide-react';
 
 export default function AboutPage() {
   const t = useT();
@@ -11,6 +11,11 @@ export default function AboutPage() {
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [stats, setStats] = useState<Record<string, number> | null>(null);
+
+  useEffect(() => {
+    fetch('/api/stats').then(r => r.ok && r.json()).then(d => setStats(d)).catch(() => {});
+  }, []);
 
   const handleContact = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,6 +111,37 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Stats */}
+      {stats && (
+        <section className="max-w-4xl mx-auto mb-20 sm:mb-32">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-10 sm:mb-14">
+            {t('about.stats.title')}
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            <div className="glass-panel p-5 sm:p-6 rounded-2xl border border-dark-glass-border text-center">
+              <Users className="w-6 h-6 text-brand-primary mx-auto mb-3" />
+              <p className="text-2xl sm:text-3xl font-bold text-white">{stats.users}</p>
+              <p className="text-xs sm:text-sm text-gray-400 mt-1">{t('about.stats.users')}</p>
+            </div>
+            <div className="glass-panel p-5 sm:p-6 rounded-2xl border border-dark-glass-border text-center">
+              <Image className="w-6 h-6 text-brand-secondary mx-auto mb-3" />
+              <p className="text-2xl sm:text-3xl font-bold text-white">{stats.imagesUploaded}</p>
+              <p className="text-xs sm:text-sm text-gray-400 mt-1">{t('about.stats.imagesUploaded')}</p>
+            </div>
+            <div className="glass-panel p-5 sm:p-6 rounded-2xl border border-dark-glass-border text-center">
+              <PenTool className="w-6 h-6 text-green-400 mx-auto mb-3" />
+              <p className="text-2xl sm:text-3xl font-bold text-white">{stats.imagesInterpreted}</p>
+              <p className="text-xs sm:text-sm text-gray-400 mt-1">{t('about.stats.imagesInterpreted')}</p>
+            </div>
+            <div className="glass-panel p-5 sm:p-6 rounded-2xl border border-dark-glass-border text-center">
+              <Gamepad2 className="w-6 h-6 text-purple-400 mx-auto mb-3" />
+              <p className="text-2xl sm:text-3xl font-bold text-white">{stats.gamesPlayed}</p>
+              <p className="text-xs sm:text-sm text-gray-400 mt-1">{t('about.stats.gamesPlayed')}</p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Community */}
       <section className="max-w-3xl mx-auto mb-20 sm:mb-32">

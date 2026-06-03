@@ -217,21 +217,27 @@ export default function PlayPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-1">{t('imaginarium.image')}</label>
-                <div className="flex gap-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                    className="flex-1 text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary file:text-white hover:file:bg-brand-primary/80"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => cameraInputRef.current?.click()}
-                    className="p-2 bg-zinc-800 hover:bg-brand-primary rounded-xl text-gray-300 hover:text-white transition-colors border border-dark-glass-border"
-                    title={t('imaginarium.camera')}
-                  >
-                    <Camera className="w-5 h-5" />
-                  </button>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex gap-2 flex-1">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="upload-file-input"
+                      onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+                      className="sr-only"
+                    />
+                    <label htmlFor="upload-file-input" className="flex-1 cursor-pointer text-center px-3 py-2.5 rounded-xl bg-zinc-800 border border-dark-glass-border text-sm text-gray-400 hover:bg-zinc-700 hover:text-white transition-colors truncate">
+                      {uploadFile ? uploadFile.name : t('imaginarium.chooseFile')}
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => cameraInputRef.current?.click()}
+                      className="shrink-0 p-2.5 bg-zinc-800 hover:bg-brand-primary rounded-xl text-gray-300 hover:text-white transition-colors border border-dark-glass-border"
+                      title={t('imaginarium.camera')}
+                    >
+                      <Camera className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
                 <input
                   ref={cameraInputRef}
