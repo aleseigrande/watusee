@@ -42,6 +42,8 @@ model User {
   mindReaderChallenges   MindReaderChallenge[]
   mindReaderAttempts     MindReaderAttempt[]
   mindReaderReactions    MindReaderReaction[]
+  puzzleGames           PuzzleGame[]
+  puzzleSessions        PuzzleSession[]
 }
 
 model Post {
@@ -388,4 +390,47 @@ model DailyPareidoliaLike {
   user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([entryId, userId])
+}
+
+model PuzzleGame {
+  id               String            @id @default(cuid())
+  postId           String            @unique
+  originalImage    String
+  interpretationImage String
+  title            String
+  description      String            @default("")
+  creatorId        String
+  creator          User              @relation(fields: [creatorId], references: [id])
+  difficulty       String            @default("medium")
+  sessions         PuzzleSession[]
+  playCount        Int               @default(0)
+  avgMoves         Float             @default(0)
+  avgTime          Float             @default(0)
+  completionRate   Float             @default(0)
+  dailyPuzzle      DailyPuzzle?
+  createdAt        DateTime          @default(now())
+}
+
+model PuzzleSession {
+  id            String      @id @default(cuid())
+  gameId        String
+  game          PuzzleGame  @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  playerId      String
+  player        User        @relation(fields: [playerId], references: [id])
+  mode          String      @default("original") // "original" | "interpretation" | "dual"
+  gridSize      Int         @default(3) // 3,4,5,6
+  moves         Int         @default(0)
+  timeSeconds   Int         @default(0)
+  hintsUsed     Int         @default(0)
+  score         Int         @default(0)
+  completed     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+}
+
+model DailyPuzzle {
+  id        String      @id @default(cuid())
+  date      DateTime    @unique
+  gameId    String      @unique
+  game      PuzzleGame  @relation(fields: [gameId], references: [id])
+  createdAt DateTime    @default(now())
 }
