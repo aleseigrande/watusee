@@ -8,9 +8,7 @@ export async function GET() {
   let dp = await prisma.dailyPuzzle.findFirst({
     where: { date: today },
     include: {
-      game: {
-        include: { creator: { select: { id: true, username: true, image: true } } },
-      },
+      game: { include: { creator: { select: { id: true, username: true, image: true } } } },
     },
   });
 
@@ -18,34 +16,32 @@ export async function GET() {
     const g = dp.game;
     return NextResponse.json({
       id: g.id,
-      originalImage: g.originalImage,
-      interpretationImage: g.interpretationImage,
+      imageUrl: g.originalImage,
       title: g.title,
       description: g.description,
       creator: g.creator,
     });
   }
 
-  const posts = await prisma.post.findMany({
-    where: { interpretedImage: { not: '' } },
+  const images = await prisma.playImage.findMany({
     include: { author: { select: { id: true, username: true, image: true } } },
     orderBy: { createdAt: 'desc' },
-    take: 100,
+    take: 200,
   });
 
-  if (posts.length === 0) {
+  if (images.length === 0) {
     return NextResponse.json({ error: 'No content available' }, { status: 404 });
   }
 
-  const pick = posts[Math.floor(Math.random() * posts.length)];
+  const pick = images[Math.floor(Math.random() * images.length)];
 
   const game = await prisma.puzzleGame.upsert({
     where: { postId: pick.id },
     update: {},
     create: {
       postId: pick.id,
-      originalImage: pick.originalImage,
-      interpretationImage: pick.interpretedImage,
+      originalImage: pick.imageUrl,
+      interpretationImage: '',
       title: pick.title,
       description: pick.description,
       creatorId: pick.authorId,
@@ -60,8 +56,7 @@ export async function GET() {
 
   return NextResponse.json({
     id: game.id,
-    originalImage: game.originalImage,
-    interpretationImage: game.interpretationImage,
+    imageUrl: game.originalImage,
     title: game.title,
     description: game.description,
     creator: pick.author,

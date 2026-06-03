@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const mode = url.searchParams.get('mode') || 'original';
-  const daily = url.searchParams.get('daily') === 'true';
+  const daily = req.nextUrl.searchParams.get('daily') === 'true';
 
   if (daily) {
     const today = new Date();
@@ -21,39 +19,34 @@ export async function GET(req: NextRequest) {
       const game = dp.game;
       return NextResponse.json({
         id: game.id,
-        originalImage: game.originalImage,
-        interpretationImage: game.interpretationImage,
+        imageUrl: game.originalImage,
         title: game.title,
         description: game.description,
         creator: game.creator,
-        mode,
         daily: true,
       });
     }
   }
 
-  const posts = await prisma.post.findMany({
-    where: { interpretedImage: { not: '' } },
-    include: {
-      author: { select: { id: true, username: true, image: true } },
-    },
+  const images = await prisma.playImage.findMany({
+    include: { author: { select: { id: true, username: true, image: true } } },
     orderBy: { createdAt: 'desc' },
-    take: 100,
+    take: 200,
   });
 
-  if (posts.length === 0) {
+  if (images.length === 0) {
     return NextResponse.json({ error: 'No puzzles available' }, { status: 404 });
   }
 
-  const pick = posts[Math.floor(Math.random() * posts.length)];
+  const pick = images[Math.floor(Math.random() * images.length)];
 
   await prisma.puzzleGame.upsert({
     where: { postId: pick.id },
     update: {},
     create: {
       postId: pick.id,
-      originalImage: pick.originalImage,
-      interpretationImage: pick.interpretedImage,
+      originalImage: pick.imageUrl,
+      interpretationImage: '',
       title: pick.title,
       description: pick.description,
       creatorId: pick.authorId,
@@ -62,9 +55,7 @@ export async function GET(req: NextRequest) {
 
   const game = await prisma.puzzleGame.findUnique({
     where: { postId: pick.id },
-    include: {
-      creator: { select: { id: true, username: true, image: true } },
-    },
+    include: { creator: { select: { id: true, username: true, image: true } } },
   });
 
   if (!game) {
@@ -73,12 +64,10 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     id: game.id,
-    originalImage: game.originalImage,
-    interpretationImage: game.interpretationImage,
+    imageUrl: game.originalImage,
     title: game.title,
     description: game.description,
     creator: game.creator,
-    mode,
     daily: false,
   });
 }

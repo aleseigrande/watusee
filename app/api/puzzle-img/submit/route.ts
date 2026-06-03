@@ -8,9 +8,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { gameId, mode, gridSize, moves, timeSeconds, hintsUsed } = await req.json();
+  const { gameId, gridSize, moves, timeSeconds, hintsUsed } = await req.json();
 
-  if (!gameId || mode == null || !gridSize || moves == null || timeSeconds == null) {
+  if (!gameId || !gridSize || moves == null || timeSeconds == null) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     data: {
       gameId,
       playerId: session.user.id,
-      mode,
+      mode: 'original',
       gridSize,
       moves,
       timeSeconds,
