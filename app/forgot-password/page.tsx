@@ -10,6 +10,7 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [resetUrl, setResetUrl] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,6 +29,7 @@ export default function ForgotPasswordPage() {
         setError(data.error);
       } else {
         setSent(true);
+        if (data.resetUrl) setResetUrl(data.resetUrl);
       }
     } catch {
       setError('Something went wrong');
@@ -55,6 +57,12 @@ export default function ForgotPasswordPage() {
             <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
             <p className="text-white font-semibold mb-2">{t('forgot.sent')}</p>
             <p className="text-gray-400 text-sm">{t('forgot.sentDesc')}</p>
+            {resetUrl && (
+              <div className="mt-4 p-3 rounded-xl bg-zinc-800 border border-dark-glass-border">
+                <p className="text-xs text-gray-400 mb-2">Reset link (SMTP not configured):</p>
+                <a href={resetUrl} className="text-brand-accent text-sm break-all hover:underline">{resetUrl}</a>
+              </div>
+            )}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">

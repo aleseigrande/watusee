@@ -32,11 +32,21 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const sent = await sendPasswordResetEmail(user.email!, token);
+  const smtpConfigured = !!process.env.SMTP_HOST;
+  let sent = false;
+  if (smtpConfigured) {
+    sent = await sendPasswordResetEmail(user.email!, token);
+  }
 
-  if (!sent && process.env.NODE_ENV === 'production') {
+  const resetUrl = `${process.env.AUTH_URL || 'https://watusee.fun'}/reset-password?token=${token}`;
+
+  if (smtpConfigured && !sent) {
     return NextResponse.json({ error: 'Failed to send email. Try again later.' }, { status: 500 });
   }
 
-  return NextResponse.json({ message: 'If that email exists, a reset link has been sent.' });
+  if (smtpConfigured) {
+    return NextResponse.json({ message: 'If that email exists, a reset link has been sent.' });
+  }
+
+  return NextResponse.json({ message: 'Reset link generated', resetUrl });
 }
