@@ -111,9 +111,15 @@ function LoginForm() {
           </div>
         </div>
 
+        <div className="flex justify-end -mt-2">
+          <Link href="/forgot-password" className="text-xs text-gray-400 hover:text-brand-accent transition-colors">
+            {t('login.forgot')}
+          </Link>
+        </div>
+
         <button
           type="submit"
-          className="mt-2 bg-brand-primary hover:bg-brand-primary/90 text-white py-3 rounded-full font-bold shadow-lg flex items-center justify-center gap-2 transition-colors"
+          className="mt-1 bg-brand-primary hover:bg-brand-primary/90 text-white py-3 rounded-full font-bold shadow-lg flex items-center justify-center gap-2 transition-colors"
         >
           {t('login.button')}
         </button>
