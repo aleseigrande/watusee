@@ -36,7 +36,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err: any) {
+    console.error('[Contact] Failed to send email:', err?.message || err);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
