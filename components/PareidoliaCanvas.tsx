@@ -308,22 +308,19 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
 
   // --- Flood fill ---
   const floodFill = (startX: number, startY: number, fillColor: string) => {
-    const canvas = canvasRef.current;
     const brushCanvas = brushCanvasRef.current;
-    if (!canvas || !brushCanvas) return;
-    const ctx = canvas.getContext('2d');
+    if (!brushCanvas) return;
     const bctx = brushCanvas.getContext('2d');
-    if (!ctx || !bctx) return;
+    if (!bctx) return;
 
-    paintCanvas();
-    const w = canvas.width, h = canvas.height;
+    const w = brushCanvas.width, h = brushCanvas.height;
     if (w === 0 || h === 0) return;
 
-    // Get composite pixel data
-    const imageData = ctx.getImageData(0, 0, w, h);
-    const data = imageData.data;
+    // Get brush canvas pixel data only (ignore bg image and shapes)
+    const brushData = bctx.getImageData(0, 0, w, h);
+    const data = brushData.data;
 
-    // Start pixel color
+    // Start pixel color on brush canvas
     const sx = Math.floor(startX), sy = Math.floor(startY);
     if (sx < 0 || sx >= w || sy < 0 || sy >= h) return;
     const si = sy * w + sx;
@@ -334,18 +331,24 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
     const fg = parseInt(fillColor.slice(3, 5), 16);
     const fb = parseInt(fillColor.slice(5, 7), 16);
 
-    if (sr === fr && sg === fg && sb === fb && sa === 255) return;
+    // If click is on an opaque brush pixel, fill that color; else fill transparent areas
+    const isTransparent = sa === 0;
 
-    // Stack-based flood fill
+    // Stack-based flood fill on brush canvas only
     const visited = new Uint8Array(w * h);
     const stack: [number, number][] = [[sx, sy]];
-    const tol = 30;
+    const tol = isTransparent ? 0 : 30;
 
-    const match = (idx: number) =>
-      Math.abs(data[idx] - sr) <= tol &&
-      Math.abs(data[idx + 1] - sg) <= tol &&
-      Math.abs(data[idx + 2] - sb) <= tol &&
-      Math.abs(data[idx + 3] - sa) <= tol;
+    const match = (idx: number) => {
+      if (isTransparent) {
+        // Transparent = fillable, any opacity = boundary
+        return data[idx + 3] === 0;
+      }
+      return Math.abs(data[idx] - sr) <= tol &&
+             Math.abs(data[idx + 1] - sg) <= tol &&
+             Math.abs(data[idx + 2] - sb) <= tol &&
+             Math.abs(data[idx + 3] - sa) <= tol;
+    };
 
     while (stack.length) {
       const [x, y] = stack.pop()!;
@@ -359,17 +362,6 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
       stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
     }
 
-    // Apply fill to brush canvas
-    const brushData = bctx.getImageData(0, 0, w, h);
-    const bd = brushData.data;
-    for (let i = 0; i < w * h; i++) {
-      if (visited[i]) {
-        bd[i * 4] = fr;
-        bd[i * 4 + 1] = fg;
-        bd[i * 4 + 2] = fb;
-        bd[i * 4 + 3] = 255;
-      }
-    }
     bctx.putImageData(brushData, 0, 0);
     paintCanvas();
   };
