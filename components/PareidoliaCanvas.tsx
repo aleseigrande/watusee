@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Upload, Eraser, Undo, Save, Trash2, Pencil, Circle, Square, Triangle, X, PaintBucket } from 'lucide-react';
+import { Upload, Eraser, Undo, Save, Trash2, Pencil, Circle, Square, Triangle, X, PaintBucket, Droplets } from 'lucide-react';
 import { useT } from '@/lib/i18n/context';
 
 interface PareidoliaCanvasProps {
@@ -9,7 +9,7 @@ interface PareidoliaCanvasProps {
   initialImage?: string;
 }
 
-type Tool = 'brush' | 'circle' | 'rect' | 'triangle';
+type Tool = 'brush' | 'circle' | 'rect' | 'triangle' | 'fill';
 
 interface ShapeObject {
   id: string;
@@ -306,6 +306,74 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // --- Flood fill ---
+  const floodFill = (startX: number, startY: number, fillColor: string) => {
+    const canvas = canvasRef.current;
+    const brushCanvas = brushCanvasRef.current;
+    if (!canvas || !brushCanvas) return;
+    const ctx = canvas.getContext('2d');
+    const bctx = brushCanvas.getContext('2d');
+    if (!ctx || !bctx) return;
+
+    paintCanvas();
+    const w = canvas.width, h = canvas.height;
+    if (w === 0 || h === 0) return;
+
+    // Get composite pixel data
+    const imageData = ctx.getImageData(0, 0, w, h);
+    const data = imageData.data;
+
+    // Start pixel color
+    const sx = Math.floor(startX), sy = Math.floor(startY);
+    if (sx < 0 || sx >= w || sy < 0 || sy >= h) return;
+    const si = sy * w + sx;
+    const sr = data[si * 4], sg = data[si * 4 + 1], sb = data[si * 4 + 2], sa = data[si * 4 + 3];
+
+    // Parse fill color
+    const fr = parseInt(fillColor.slice(1, 3), 16);
+    const fg = parseInt(fillColor.slice(3, 5), 16);
+    const fb = parseInt(fillColor.slice(5, 7), 16);
+
+    if (sr === fr && sg === fg && sb === fb && sa === 255) return;
+
+    // Stack-based flood fill
+    const visited = new Uint8Array(w * h);
+    const stack: [number, number][] = [[sx, sy]];
+    const tol = 10;
+
+    const match = (idx: number) =>
+      Math.abs(data[idx] - sr) <= tol &&
+      Math.abs(data[idx + 1] - sg) <= tol &&
+      Math.abs(data[idx + 2] - sb) <= tol &&
+      Math.abs(data[idx + 3] - sa) <= tol;
+
+    while (stack.length) {
+      const [x, y] = stack.pop()!;
+      if (x < 0 || x >= w || y < 0 || y >= h) continue;
+      const vi = y * w + x;
+      if (visited[vi]) continue;
+      const di = vi * 4;
+      if (!match(di)) continue;
+      visited[vi] = 1;
+      data[di] = fr; data[di + 1] = fg; data[di + 2] = fb; data[di + 3] = 255;
+      stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+    }
+
+    // Apply fill to brush canvas
+    const brushData = bctx.getImageData(0, 0, w, h);
+    const bd = brushData.data;
+    for (let i = 0; i < w * h; i++) {
+      if (visited[i]) {
+        bd[i * 4] = fr;
+        bd[i * 4 + 1] = fg;
+        bd[i * 4 + 2] = fb;
+        bd[i * 4 + 3] = 255;
+      }
+    }
+    bctx.putImageData(brushData, 0, 0);
+    paintCanvas();
+  };
+
   // --- Event handlers ---
   const handlePointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
@@ -315,6 +383,12 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
     if (!ctx) return;
     const pos = getPos(e);
     const bc = brushCanvasRef.current?.getContext('2d');
+
+    if (tool === 'fill') {
+      saveBrushState();
+      floodFill(pos.x, pos.y, color);
+      return;
+    }
 
     if (tool === 'brush') {
       saveBrushState();
@@ -584,6 +658,7 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
   // --- Render ---
   const TOOLS: { id: Tool; icon: React.ReactNode }[] = [
     { id: 'brush', icon: <Pencil className="w-4 h-4 sm:w-5 sm:h-5" /> },
+    { id: 'fill', icon: <Droplets className="w-4 h-4 sm:w-5 sm:h-5" /> },
     { id: 'circle', icon: <Circle className="w-4 h-4 sm:w-5 sm:h-5" /> },
     { id: 'rect', icon: <Square className="w-4 h-4 sm:w-5 sm:h-5" /> },
     { id: 'triangle', icon: <Triangle className="w-4 h-4 sm:w-5 sm:h-5" /> },
@@ -621,7 +696,7 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
                 ))}
               </div>
 
-              {tool !== 'brush' && (
+              {(tool === 'circle' || tool === 'rect' || tool === 'triangle') && (
                 <button
                   onClick={() => setFillEnabled(!fillEnabled)}
                   className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
