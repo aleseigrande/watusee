@@ -339,7 +339,7 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
     // Stack-based flood fill
     const visited = new Uint8Array(w * h);
     const stack: [number, number][] = [[sx, sy]];
-    const tol = 10;
+    const tol = 30;
 
     const match = (idx: number) =>
       Math.abs(data[idx] - sr) <= tol &&
