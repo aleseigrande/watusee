@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Bell } from 'lucide-react';
 import { useT } from '@/lib/i18n/context';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Actor {
   username: string;
@@ -47,6 +47,7 @@ function notifText(n: NotificationItem): string {
 
 export default function NotificationBell() {
   const t = useT();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [notifs, setNotifs] = useState<NotificationItem[]>([]);
   const [unread, setUnread] = useState(0);
@@ -108,7 +109,7 @@ export default function NotificationBell() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-2 z-50 w-80 glass-panel rounded-2xl border border-dark-glass-border overflow-hidden shadow-xl max-h-96 overflow-y-auto">
+          <div className="fixed sm:absolute left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 top-12 sm:top-auto sm:mt-2 z-50 w-[calc(100vw-2rem)] sm:w-80 max-w-md glass-panel rounded-2xl border border-dark-glass-border shadow-xl max-h-96 overflow-y-auto">
             <div className="p-3 border-b border-dark-glass-border">
               <h3 className="text-sm font-bold text-white">Notifications</h3>
             </div>
@@ -118,8 +119,12 @@ export default function NotificationBell() {
               notifs.map((n) => (
                 <div
                   key={n.id}
-                  className={`flex items-start gap-3 px-4 py-3 border-b border-dark-glass-border/50 transition-colors ${n.read ? 'opacity-60' : 'bg-brand-primary/5'}`}
-                  onClick={() => handleMarkRead(n.id)}
+                  className={`flex items-start gap-3 px-4 py-3 border-b border-dark-glass-border/50 transition-colors cursor-pointer ${n.read ? 'opacity-60' : 'bg-brand-primary/5'} hover:bg-white/5`}
+                  onClick={() => {
+                    handleMarkRead(n.id);
+                    if (n.postId) router.push(`/post/${n.postId}`);
+                    else setOpen(false);
+                  }}
                 >
                   <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center text-sm flex-shrink-0">
                     {n.actor.image ? (
