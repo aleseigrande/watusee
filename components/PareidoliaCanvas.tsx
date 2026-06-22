@@ -36,7 +36,6 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
   const [tool, setTool] = useState<Tool>('brush');
   const [color, setColor] = useState('#6B4EFF');
   const [brushSize, setBrushSize] = useState(5);
-  const [bgColor, setBgColor] = useState('#000000');
   const [fillEnabled, setFillEnabled] = useState(false);
 
   const PRESET_COLORS = ['#FF0000', '#FF6B00', '#FFD700', '#00FF00', '#00BFFF', '#6B4EFF', '#FF69B4', '#FFFFFF', '#888888', '#000000'];
@@ -636,15 +635,14 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
   }, []);
 
   const handleSave = () => {
-    if (!image || !canvasRef.current) return;
+    if (!bgImageRef.current || !canvasRef.current) return;
     const canvas = canvasRef.current;
     const offscreen = document.createElement('canvas');
     offscreen.width = canvas.width;
     offscreen.height = canvas.height;
     const offCtx = offscreen.getContext('2d');
     if (offCtx) {
-      offCtx.fillStyle = bgColor;
-      offCtx.fillRect(0, 0, offscreen.width, offscreen.height);
+      offCtx.drawImage(bgImageRef.current, 0, 0, offscreen.width, offscreen.height);
       if (brushCanvasRef.current) {
         offCtx.drawImage(brushCanvasRef.current, 0, 0);
       }
@@ -652,7 +650,7 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
         drawShape(offCtx, s);
       }
     }
-    onSave(image, offscreen.toDataURL('image/png'));
+    onSave(image!, offscreen.toDataURL('image/png'));
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -734,11 +732,6 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
                     title={c}
                   />
                 ))}
-              </div>
-
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="text-[11px] sm:text-sm text-gray-300 hidden sm:inline">{t('canvas.tool.bg')}</span>
-                <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-7 h-7 sm:w-8 sm:h-8 rounded cursor-pointer bg-transparent border-0 p-0" />
               </div>
 
               <div className="flex items-center gap-1.5 sm:gap-2">
